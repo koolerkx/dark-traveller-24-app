@@ -5,35 +5,28 @@ import { VitePWA, VitePWAOptions } from "vite-plugin-pwa";
 
 const vitePWAManifest: Partial<VitePWAOptions> = {
   registerType: "autoUpdate",
-  includeAssets: ["favicon.ico", "apple-touc-icon.png", "masked-icon.svg"],
   manifest: {
     name: "Dark Traveller 24",
     short_name: "dark-traveller-24",
     description: "Used by Dark Traveller",
     icons: [
       {
-        src: "/maskable_icon.png",
-        sizes: "512x512",
-        type: "image/png",
-        purpose: "any maskable",
-      },
-      {
-        src: "/icon-192x192.png",
+        src: "/favicon/icon-192x192.png",
         sizes: "192x192",
         type: "image/png",
       },
       {
-        src: "/icon-256x256.png",
+        src: "/favicon/icon-256x256.png",
         sizes: "256x256",
         type: "image/png",
       },
       {
-        src: "/icon-384x384.png",
+        src: "/favicon/icon-384x384.png",
         sizes: "384x384",
         type: "image/png",
       },
       {
-        src: "/icon-512x512.png",
+        src: "/favicon/icon-512x512.png",
         sizes: "512x512",
         type: "image/png",
       },
