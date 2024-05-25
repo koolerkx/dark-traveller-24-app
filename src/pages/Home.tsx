@@ -6,6 +6,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import HomeBossCard from "../components/HomeBossCard";
+import HomeCaptureCard from "../components/HomeCaptureCard";
 import "./Home.css";
 
 const Home: React.FC = () => {
@@ -26,6 +27,7 @@ const Home: React.FC = () => {
         </IonHeader>
 
         <HomeBossCard />
+        <HomeCaptureCard />
       </IonContent>
     </IonPage>
   );

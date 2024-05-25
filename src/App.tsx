@@ -43,6 +43,8 @@ import "@ionic/react/css/palettes/dark.system.css";
 import { home, map, person, podium } from "ionicons/icons";
 import "./theme/variables.css";
 
+import "./theme/global.css";
+
 setupIonicReact();
 
 const App: React.FC = () => {

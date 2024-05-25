@@ -1,0 +1,31 @@
+.capture-card-point-list {
+  /* display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 0.5rem; */
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 0.5rem;
+  column-gap: 0.5rem;
+}
+
+.capture-card ion-chip {
+  pointer-events: none;
+  margin: 0;
+}
+
+.capture-card ion-list {
+  margin-top: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.capture-card ion-label:nth-child(2n) {
+  text-align: right;
+}
+
+.capture-card-info-dps {
+  display: flex;
+  justify-content: space-between;
+}
