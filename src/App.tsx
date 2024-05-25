@@ -45,6 +45,7 @@ import "./theme/variables.css";
 
 import "./theme/global.css";
 import Ranking from "./pages/Ranking";
+import Profile from "./pages/Profile";
 
 setupIonicReact();
 
@@ -82,6 +83,9 @@ const App: React.FC = () => {
             </Route>
             <Route exact path="/ranking">
               <Ranking />
+            </Route>
+            <Route exact path="/profile">
+              <Profile />
             </Route>
             <Route exact path="/">
               <Redirect to="/home" />
