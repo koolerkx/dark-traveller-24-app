@@ -2,24 +2,17 @@ import {
   IonCard,
   IonCardContent,
   IonCardHeader,
-  IonCardSubtitle,
   IonCardTitle,
   IonChip,
-  IonCol,
-  IonGrid,
-  IonInput,
   IonItem,
   IonLabel,
   IonList,
-  IonNote,
-  IonProgressBar,
-  IonRow,
-  IonText,
-  IonToggle,
 } from "@ionic/react";
 import "./HomeCaptureCard.css";
 
-const PointChip: React.FC<{
+export type Point = string;
+
+export const PointChip: React.FC<{
   label: string;
 }> = ({ label }) => (
   <IonChip color="primary">
@@ -30,7 +23,7 @@ const PointChip: React.FC<{
 interface ContainerProps {}
 
 const HomeCaptureCard: React.FC<ContainerProps> = () => {
-  const points = [
+  const points: Point[] = [
     "天瑞體育館",
     "天水圍運動場",
     "濕地公園門口",

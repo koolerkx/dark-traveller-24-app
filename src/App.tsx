@@ -44,6 +44,7 @@ import { home, map, person, podium } from "ionicons/icons";
 import "./theme/variables.css";
 
 import "./theme/global.css";
+import Ranking from "./pages/Ranking";
 
 setupIonicReact();
 
@@ -62,7 +63,7 @@ const App: React.FC = () => {
     {
       name: "ranking",
       icon: podium,
-      label: "排名",
+      label: "排行榜",
     },
     {
       name: "profile",
@@ -78,6 +79,9 @@ const App: React.FC = () => {
           <IonRouterOutlet>
             <Route exact path="/home">
               <Home />
+            </Route>
+            <Route exact path="/ranking">
+              <Ranking />
             </Route>
             <Route exact path="/">
               <Redirect to="/home" />
