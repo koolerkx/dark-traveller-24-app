@@ -10,7 +10,7 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router-dom";
-import Tab1 from "./pages/Tab1";
+import Home from "./pages/Home";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -50,22 +50,22 @@ const App: React.FC = () => {
     {
       name: "home",
       icon: home,
-      label: "Home",
+      label: "主頁",
     },
     {
       name: "map",
       icon: map,
-      label: "Map",
+      label: "地圖",
     },
     {
       name: "ranking",
       icon: podium,
-      label: "Ranking",
+      label: "排名",
     },
     {
       name: "profile",
       icon: person,
-      label: "Profile",
+      label: "狀態",
     },
   ];
 
@@ -75,7 +75,7 @@ const App: React.FC = () => {
         <IonTabs>
           <IonRouterOutlet>
             <Route exact path="/home">
-              <Tab1 />
+              <Home />
             </Route>
             <Route exact path="/">
               <Redirect to="/home" />

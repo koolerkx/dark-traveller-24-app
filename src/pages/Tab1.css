@@ -1,9 +1,0 @@
-ion-progress-bar {
-  --background: #f3e895;
-  --progress-background: #09c567;
-}
-
-.card-title {
-  display: flex;
-  justify-content: space-between;
-}
