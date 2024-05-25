@@ -1,16 +1,39 @@
-import { useEffect, useRef, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
-import "./MapComponent.css";
-import "leaflet/dist/leaflet.css";
+import type { GeoJsonObject } from "geojson";
 import { Map } from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { useEffect, useState } from "react";
+import { GeoJSON, MapContainer, TileLayer } from "react-leaflet";
+import "./MapComponent.css";
+import { useIonToast } from "@ionic/react";
 
 interface ContainerProps {}
 
 const MapComponent: React.FC<ContainerProps> = () => {
   const [map, setMap] = useState<Map | null>(null);
+  const [cycleTrackData, setCycleTrackData] = useState<GeoJsonObject | null>(
+    null
+  );
+  const [present] = useIonToast();
 
   const latitude = 22.461944;
   const longitude = 114.001504;
+  // const cycleURL =
+  //   "https://api.csdi.gov.hk/apim/dataquery/api/?id=td_rcd_1629267205229_68005&layer=cyctrack&bbox-crs=WGS84&bbox=113.8,22.1,114.7,23.0&limit=10000&offset=0";
+  const cycleURL = "/json/cycleTrack.json";
+
+  useEffect(() => {
+    fetch(cycleURL)
+      .then((response) => response.json())
+      .then((data) => setCycleTrackData(data))
+      .catch((e: unknown) => {
+        present({
+          message: "有些地方出錯了！",
+          duration: 1500,
+          position: "bottom",
+          color: "warning",
+        });
+      });
+  }, []);
 
   // https://github.com/PaulLeCam/react-leaflet/issues/1052#issuecomment-1832647862
   useEffect(() => {
@@ -36,11 +59,15 @@ const MapComponent: React.FC<ContainerProps> = () => {
       />
       <TileLayer url="https://mapapi.geodata.gov.hk/gs/api/v1.0.0/xyz/label/hk/tc/wgs84/{z}/{x}/{y}.png" />
       {/* <ComponentResize /> */}
-      <Marker position={[latitude, longitude]}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
+
+      {!!cycleTrackData ? (
+        <GeoJSON
+          data={cycleTrackData}
+          pathOptions={{
+            color: "#cb1a27",
+          }}
+        />
+      ) : null}
     </MapContainer>
   );
 };
