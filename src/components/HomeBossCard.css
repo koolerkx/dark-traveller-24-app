@@ -1,0 +1,18 @@
+.boss-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.boss-card-title > ion-card-header {
+  padding-bottom: 0;
+}
+
+.boss-card ion-progress-bar {
+  --background: #c5000f;
+  --progress-background: #09c567;
+}
+
+.boss-card ion-chip {
+  pointer-events: none;
+}

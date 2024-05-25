@@ -1,22 +1,50 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Tab1.css';
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonChip,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonProgressBar,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
+import ExploreContainer from "../components/ExploreContainer";
+import "./Tab1.css";
 
 const Tab1: React.FC = () => {
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader translucent={true}>
         <IonToolbar>
-          <IonTitle>Tab 1</IonTitle>
+          <IonTitle>單車定向</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Tab 1</IonTitle>
+            <IonTitle size="large">單車定向</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer name="Tab 1 page" />
+
+        <IonCard>
+          <div className="card-title">
+            <IonCardHeader>
+              <IonCardTitle>敵人</IonCardTitle>
+              <IonCardSubtitle>Boss</IonCardSubtitle>
+            </IonCardHeader>
+            <IonCardHeader>
+              <IonChip color="dark">HP: 2481 / 3222</IonChip>
+            </IonCardHeader>
+          </div>
+
+          <IonCardContent>
+            <IonProgressBar value={0.75} buffer={1}></IonProgressBar>
+          </IonCardContent>
+        </IonCard>
       </IonContent>
     </IonPage>
   );
