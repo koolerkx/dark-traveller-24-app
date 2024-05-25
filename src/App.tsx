@@ -46,6 +46,7 @@ import "./theme/variables.css";
 import "./theme/global.css";
 import Ranking from "./pages/Ranking";
 import Profile from "./pages/Profile";
+import Map from "./pages/Map";
 
 setupIonicReact();
 
@@ -80,6 +81,9 @@ const App: React.FC = () => {
           <IonRouterOutlet>
             <Route exact path="/home">
               <Home />
+            </Route>
+            <Route exact path="/map">
+              <Map />
             </Route>
             <Route exact path="/ranking">
               <Ranking />

@@ -27,7 +27,7 @@ const RankingItem: React.FC<{
       </IonItem>
       <div className="ion-padding ranking-point-list" slot="content">
         {points.map((point) => (
-          <PointChip key={point} label={point} />
+          <PointChip key={point.label} label={point.label} />
         ))}
       </div>
     </IonAccordion>
@@ -41,35 +41,35 @@ const RankingTable: React.FC<ContainerProps> = () => {
     {
       name: "SY1",
       points: [
-        "天瑞體育館",
-        "天水圍運動場",
-        "濕地公園門口",
-        "天水圍單車匯合中心",
-        "天瑞體育館",
-        "天水圍運動場",
-        "濕地公園門口",
-        "天水圍單車匯合中心",
+        { label: "天瑞體育館" },
+        { label: "天水圍運動場" },
+        { label: "濕地公園門口" },
+        { label: "天水圍單車匯合中心" },
+        { label: "天瑞體育館" },
+        { label: "天水圍運動場" },
+        { label: "濕地公園門口" },
+        { label: "天水圍單車匯合中心" },
       ],
     },
     {
       name: "SY2",
-      points: ["天瑞體育館", "天水圍運動場"],
+      points: [{ label: "天瑞體育館" }, { label: "天水圍運動場" }],
     },
     {
       name: "小火龍",
-      points: ["天瑞體育館", "天水圍運動場"],
+      points: [{ label: "天瑞體育館" }, { label: "天水圍運動場" }],
     },
     {
       name: "比卡超",
-      points: ["天瑞體育館", "天水圍運動場"],
+      points: [{ label: "天瑞體育館" }, { label: "天水圍運動場" }],
     },
     {
       name: "Apple Watch",
-      points: ["天瑞體育館", "天水圍運動場"],
+      points: [{ label: "天瑞體育館" }, { label: "天水圍運動場" }],
     },
     {
       name: "有朋自遠方來，不亦樂乎。",
-      points: ["天瑞體育館", "天水圍運動場"],
+      points: [{ label: "天瑞體育館" }, { label: "天水圍運動場" }],
     },
   ];
 
