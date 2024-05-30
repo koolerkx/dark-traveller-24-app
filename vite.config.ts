@@ -2,6 +2,7 @@ import legacy from "@vitejs/plugin-legacy";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 import { VitePWA, VitePWAOptions } from "vite-plugin-pwa";
+import { loadEnv } from "vite";
 
 const vitePWAManifest: Partial<VitePWAOptions> = {
   registerType: "autoUpdate",
@@ -41,11 +42,18 @@ const vitePWAManifest: Partial<VitePWAOptions> = {
 };
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react(), legacy(), VitePWA(vitePWAManifest)],
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "./src/setupTests.ts",
-  },
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+
+  return {
+    define: {
+      "process.env": env,
+    },
+    plugins: [react(), legacy(), VitePWA(vitePWAManifest)],
+    test: {
+      globals: true,
+      environment: "jsdom",
+      setupFiles: "./src/setupTests.ts",
+    },
+  };
 });
