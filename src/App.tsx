@@ -47,10 +47,17 @@ import "./theme/global.css";
 import Ranking from "./pages/Ranking";
 import Profile from "./pages/Profile";
 import Map from "./pages/Map";
+import Login from "./pages/Login";
+import { AuthRoute, PublicOnlyRoute } from "./route";
+import { useAuth } from "./contexts/auth";
+import { useMemo } from "react";
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  const { user } = useAuth();
+  const isAuthed = useMemo(() => !!user, [user]);
+
   const tabBarButtonConfig = [
     {
       name: "home",
@@ -79,23 +86,27 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            <Route exact path="/home">
+            <AuthRoute exact isAuthed={isAuthed} path="/home">
               <Home />
-            </Route>
-            <Route exact path="/map">
+            </AuthRoute>
+            <AuthRoute exact isAuthed={isAuthed} path="/map">
               <Map />
-            </Route>
-            <Route exact path="/ranking">
+            </AuthRoute>
+            <AuthRoute exact isAuthed={isAuthed} path="/ranking">
               <Ranking />
-            </Route>
-            <Route exact path="/profile">
+            </AuthRoute>
+            <AuthRoute exact isAuthed={isAuthed} path="/profile">
               <Profile />
-            </Route>
-            <Route exact path="/">
+            </AuthRoute>
+            <AuthRoute exact isAuthed={isAuthed} path="/">
               <Redirect to="/home" />
+              <Home />
+            </AuthRoute>
+            <Route exact path="/login">
+              <Login />
             </Route>
           </IonRouterOutlet>
-          <IonTabBar slot="bottom">
+          <IonTabBar slot="bottom" className={isAuthed ? "" : "display-none"}>
             {tabBarButtonConfig.map((config, index) => (
               <IonTabButton
                 key={index}
