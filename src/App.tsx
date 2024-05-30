@@ -96,8 +96,12 @@ const App: React.FC = () => {
             </Route>
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
-            {tabBarButtonConfig.map((config) => (
-              <IonTabButton tab={config.name} href={"/" + config.name}>
+            {tabBarButtonConfig.map((config, index) => (
+              <IonTabButton
+                key={index}
+                tab={config.name}
+                href={"/" + config.name}
+              >
                 <IonIcon aria-hidden="true" icon={config.icon} />
                 <IonLabel>{config.label}</IonLabel>
               </IonTabButton>
