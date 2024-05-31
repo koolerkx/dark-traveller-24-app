@@ -43,20 +43,19 @@ import "@ionic/react/css/palettes/dark.system.css";
 import { home, map, person, podium } from "ionicons/icons";
 import "./theme/variables.css";
 
-import "./theme/global.css";
-import Ranking from "./pages/Ranking";
-import Profile from "./pages/Profile";
-import Map from "./pages/Map";
-import Login from "./pages/Login";
-import { AuthRoute, PublicOnlyRoute } from "./route";
 import { useAuth } from "./contexts/auth";
-import { useMemo } from "react";
+import Login from "./pages/Login";
+import Map from "./pages/Map";
+import Profile from "./pages/Profile";
+import Ranking from "./pages/Ranking";
+import { AuthRoute } from "./route";
+import "./theme/global.css";
+import { useEffect } from "react";
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  const { user } = useAuth();
-  const isAuthed = useMemo(() => !!user, [user]);
+  const { isAuthed, isLoading } = useAuth();
 
   const tabBarButtonConfig = [
     {
@@ -86,27 +85,39 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            <AuthRoute exact isAuthed={isAuthed} path="/home">
-              <Home />
-            </AuthRoute>
-            <AuthRoute exact isAuthed={isAuthed} path="/map">
-              <Map />
-            </AuthRoute>
-            <AuthRoute exact isAuthed={isAuthed} path="/ranking">
-              <Ranking />
-            </AuthRoute>
-            <AuthRoute exact isAuthed={isAuthed} path="/profile">
-              <Profile />
-            </AuthRoute>
-            <AuthRoute exact isAuthed={isAuthed} path="/">
-              <Redirect to="/home" />
-              <Home />
-            </AuthRoute>
+            {/* Public Route */}
+            <Route exact path="/">
+              <Redirect to={"/login"} />
+            </Route>
             <Route exact path="/login">
               <Login />
             </Route>
+            {/* Auth Route */}
+            <Route
+              exact
+              path="/home"
+              render={() => (isAuthed ? <Home /> : <Login />)}
+            ></Route>
+            <Route
+              exact
+              path="/map"
+              render={() => (isAuthed ? <Map /> : <Login />)}
+            ></Route>
+            <Route
+              exact
+              path="/ranking"
+              render={() => (isAuthed ? <Ranking /> : <Login />)}
+            ></Route>
+            <Route
+              exact
+              path="/profile"
+              render={() => (isAuthed ? <Profile /> : <Login />)}
+            ></Route>
           </IonRouterOutlet>
-          <IonTabBar slot="bottom" className={isAuthed ? "" : "display-none"}>
+          <IonTabBar
+            slot="bottom"
+            className={!isLoading && isAuthed ? "" : "display-none"}
+          >
             {tabBarButtonConfig.map((config, index) => (
               <IonTabButton
                 key={index}

@@ -1,46 +1,83 @@
-import { User, getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import React, { createContext, useCallback, useContext, useState } from "react";
+import {
+  User,
+  browserLocalPersistence,
+  getAuth,
+  onAuthStateChanged,
+  setPersistence,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { FirebaseContext } from "./firebase";
 
 interface AuthContext {
   user: User | null;
   login: (credential: { username: string; password?: string }) => Promise<User>;
+  logout: () => Promise<void>;
+  isAuthed: boolean;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContext | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { app } = useContext(FirebaseContext);
+  if (!app)
+    throw new Error("AuthProvider must be used within a FirebaseProvider");
+
+  const auth = getAuth(app);
 
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsLoading(true);
+      setUser(user);
+      setIsLoading(false);
+    });
+    return unsubscribe;
+  }, [app, auth]);
 
   const login = useCallback(
     async (credential: { username: string; password?: string }) => {
-      if (!app) throw new Error("Firebase app not initialized");
-
-      const auth = getAuth(app);
-
       const email = `${credential.username}@example.com`;
       const password = credential.password || "123456";
 
       try {
+        await setPersistence(auth, browserLocalPersistence);
+
         const userCrendential = await signInWithEmailAndPassword(
           auth,
           email,
           password
         );
 
-        setUser(userCrendential.user);
-
         return userCrendential.user;
       } catch (error) {
         throw error;
       }
     },
-    [app]
+    [app, auth]
   );
 
-  const authContextReturn: AuthContext = { user: user, login: login };
+  const logout = useCallback(async () => {
+    await signOut(auth);
+  }, [auth, setUser]);
+
+  const authContextReturn: AuthContext = {
+    user: user,
+    login: login,
+    logout: logout,
+    isAuthed: !!user,
+    isLoading: isLoading,
+  };
 
   return (
     <AuthContext.Provider value={authContextReturn}>

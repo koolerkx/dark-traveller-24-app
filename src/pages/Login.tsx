@@ -13,57 +13,68 @@ import {
   useIonRouter,
   useIonToast,
 } from "@ionic/react";
-import { warning } from "ionicons/icons";
-import { useRef } from "react";
+import { close, warning } from "ionicons/icons";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../contexts/auth";
 import "./Login.css";
 import { Redirect } from "react-router";
+import Splash from "./Splash";
 
 const Login: React.FC = () => {
   const headerTitle = "登入";
 
   const router = useIonRouter();
-  const { user, login } = useAuth();
+  const { isAuthed, isLoading: isAuthLoading, login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [present] = useIonToast();
 
-  const usernameRef = useRef<string>("sy1");
-  const passwordRef = useRef<string>("123456");
+  const usernameRef = useRef<string>("");
+  const passwordRef = useRef<string>("");
 
-  const onLoginButtonClick = async (e: React.MouseEvent) => {
-    e.preventDefault();
+  const onLoginButtonClick = useCallback(
+    async (e: React.MouseEvent) => {
+      e.preventDefault();
 
-    try {
-      if (!usernameRef.current || !passwordRef.current) {
-        throw Error("Missing login info");
+      if (isLoading) return;
+
+      try {
+        setIsLoading(true);
+        if (!usernameRef.current || !passwordRef.current) {
+          throw Error("Missing login info");
+        }
+
+        await login({
+          username: usernameRef.current,
+          password: passwordRef.current,
+        });
+
+        router.push("/home", "root", "replace");
+      } catch {
+        present({
+          icon: warning,
+          message: "登入資訊錯誤",
+          duration: 5000,
+          position: "bottom",
+          swipeGesture: "vertical",
+          buttons: [
+            {
+              icon: close,
+              role: "cancel",
+            },
+          ],
+          color: "warning",
+        });
       }
+      setIsLoading(false);
+    },
+    [present, login, router]
+  );
 
-      await login({
-        username: usernameRef.current,
-        password: passwordRef.current,
-      });
-
-      router.push("/", "none", "replace");
-    } catch {
-      present({
-        icon: warning,
-        message: "登入資訊錯誤",
-        duration: 5000,
-        position: "bottom",
-        swipeGesture: "vertical",
-        buttons: [
-          {
-            text: "關閉",
-            role: "cancel",
-          },
-        ],
-        color: "warning",
-      });
-    }
-  };
-
-  return !!user ? (
-    <Redirect to={"/"} />
+  return isAuthLoading ? (
+    <Splash />
+  ) : isAuthed ? (
+    <Redirect to={"/home"} />
   ) : (
     <IonPage>
       <IonHeader translucent={true}>
@@ -109,7 +120,11 @@ const Login: React.FC = () => {
           <IonNote>你可以從工作人員獲取登入資料</IonNote>
         </div>
         <div className="ion-padding">
-          <IonButton expand="block" onClick={onLoginButtonClick}>
+          <IonButton
+            expand="block"
+            onClick={onLoginButtonClick}
+            disabled={isLoading}
+          >
             登入
           </IonButton>
         </div>
