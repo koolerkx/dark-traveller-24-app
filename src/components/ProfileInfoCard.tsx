@@ -53,7 +53,7 @@ export const ProfileInfoCardHeaderButton: React.FC<{ className: string }> = ({
         <IonContent>
           <IonList>
             <IonItem button={true} detail={false} onClick={onLogoutButtonClick}>
-              Logout
+              登出
             </IonItem>
           </IonList>
         </IonContent>
