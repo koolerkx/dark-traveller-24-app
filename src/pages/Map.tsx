@@ -10,15 +10,15 @@ import MapComponent from "../components/MapComponent";
 import "./Map.css";
 
 const Map: React.FC = () => {
-  const headerTitle = "地圖";
+  // const headerTitle = "地圖";
 
   return (
     <IonPage>
-      <IonHeader translucent={true}>
+      {/* <IonHeader translucent={true}>
         <IonToolbar>
           <IonTitle>{headerTitle}</IonTitle>
         </IonToolbar>
-      </IonHeader>
+      </IonHeader> */}
       <IonContent fullscreen>
         <MapComponent />
       </IonContent>
