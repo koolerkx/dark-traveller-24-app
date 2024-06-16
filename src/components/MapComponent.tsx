@@ -2,13 +2,16 @@ import type { GeoJsonObject } from "geojson";
 import { Map } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
-import { GeoJSON, MapContainer, TileLayer } from "react-leaflet";
+import { GeoJSON, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "./MapComponent.css";
-import { useIonToast } from "@ionic/react";
+import { IonImg, useIonToast } from "@ionic/react";
+import { Point } from "../types/point";
 
-interface ContainerProps {}
+interface ContainerProps {
+  points: Point[];
+}
 
-const MapComponent: React.FC<ContainerProps> = () => {
+const MapComponent: React.FC<ContainerProps> = ({ points }) => {
   const [map, setMap] = useState<Map | null>(null);
   const [cycleTrackData, setCycleTrackData] = useState<GeoJsonObject | null>(
     null
@@ -44,6 +47,27 @@ const MapComponent: React.FC<ContainerProps> = () => {
     }, 0);
   }, [map]);
 
+  const makePointMarker = (point: Point) => {
+    return (
+      <Marker
+        position={[point.location.lat, point.location.long]}
+        key={point.id}
+      >
+        <Popup>
+          <h3>{point.point}</h3>
+          {!!point.heroImage ? (
+            <IonImg
+              src={point.heroImage}
+              alt={point.point}
+              className="marker-image"
+            />
+          ) : null}
+          <p>{point.description}</p>
+        </Popup>
+      </Marker>
+    );
+  };
+
   // https://portal.csdi.gov.hk/csdi-webpage/apidoc/MapLabelAPI;jsessionid=A1E5F54A87E6020B5C52EFAE42CD46DD
   return (
     // Make sure you set the height and width of the map container otherwise the map won't show
@@ -68,6 +92,8 @@ const MapComponent: React.FC<ContainerProps> = () => {
           }}
         />
       ) : null}
+
+      {points.length > 0 ? points.map(makePointMarker) : null}
     </MapContainer>
   );
 };

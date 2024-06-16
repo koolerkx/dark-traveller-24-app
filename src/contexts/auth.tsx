@@ -35,11 +35,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const auth = getAuth(app);
   if (
     process.env.FIRESTORE_EMULATOR == "true" &&
-    !!process.env.FIREBASE_FIRESTORE_EMULATOR_HOST
+    !!process.env.FIREBASE_AUTH_EMULATOR_HOST
   ) {
     // https://stackoverflow.com/questions/73605307/firebase-auth-emulator-fails-intermittently-with-auth-emulator-config-failed
     (auth as unknown as any)._canInitEmulator = true;
-    connectAuthEmulator(auth, process.env.FIREBASE_FIRESTORE_EMULATOR_HOST, {
+    connectAuthEmulator(auth, process.env.FIREBASE_AUTH_EMULATOR_HOST, {
       disableWarnings: true,
     });
   }
