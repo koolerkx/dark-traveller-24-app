@@ -1,5 +1,7 @@
 import {
   IonApp,
+  IonFab,
+  IonFabButton,
   IonIcon,
   IonLabel,
   IonRouterOutlet,
@@ -40,7 +42,7 @@ import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
-import { home, map, person, podium } from "ionicons/icons";
+import { home, map, person, podium, qrCode } from "ionicons/icons";
 import "./theme/variables.css";
 
 import { useAuth } from "./contexts/auth";
@@ -48,9 +50,8 @@ import Login from "./pages/Login";
 import Map from "./pages/Map";
 import Profile from "./pages/Profile";
 import Ranking from "./pages/Ranking";
-import { AuthRoute } from "./route";
 import "./theme/global.css";
-import { useEffect } from "react";
+import Scan from "./pages/Scan";
 
 setupIonicReact();
 
@@ -67,6 +68,12 @@ const App: React.FC = () => {
       name: "map",
       icon: map,
       label: "地圖",
+    },
+    {
+      name: "scan",
+      icon: qrCode,
+      label: "掃描QR碼",
+      accent: true,
     },
     {
       name: "ranking",
@@ -113,6 +120,11 @@ const App: React.FC = () => {
               path="/profile"
               render={() => (isAuthed ? <Profile /> : <Login />)}
             ></Route>
+            <Route
+              exact
+              path="/scan"
+              render={() => (isAuthed ? <Scan /> : <Login />)}
+            ></Route>
           </IonRouterOutlet>
           <IonTabBar
             slot="bottom"
@@ -124,8 +136,18 @@ const App: React.FC = () => {
                 tab={config.name}
                 href={"/" + config.name}
               >
-                <IonIcon aria-hidden="true" icon={config.icon} />
-                <IonLabel>{config.label}</IonLabel>
+                {config.accent ? (
+                  <IonFab>
+                    <IonFabButton>
+                      <IonIcon icon={config.icon} style={{ color: "white" }} />
+                    </IonFabButton>
+                  </IonFab>
+                ) : (
+                  <>
+                    <IonIcon aria-hidden="true" icon={config.icon} />
+                    <IonLabel>{config.label}</IonLabel>
+                  </>
+                )}
               </IonTabButton>
             ))}
           </IonTabBar>
