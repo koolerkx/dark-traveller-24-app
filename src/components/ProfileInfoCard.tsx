@@ -13,10 +13,17 @@ import {
   IonText,
   useIonRouter,
 } from "@ionic/react";
-import "./ProfileInfoCard.css";
-import { ellipsisHorizontal, ellipsisVertical } from "ionicons/icons";
-import { useAuth } from "../contexts/auth";
+import {
+  ellipsisHorizontal,
+  ellipsisVertical,
+  star,
+  starOutline,
+} from "ionicons/icons";
 import { useCallback } from "react";
+import { useAuth } from "../contexts/auth";
+import { User } from "../repository/user";
+import { PlaceholderText } from "./PlaceholderText";
+import "./ProfileInfoCard.css";
 
 export const ProfileInfoCardHeaderButton: React.FC<{ className: string }> = ({
   className,
@@ -62,13 +69,20 @@ export const ProfileInfoCardHeaderButton: React.FC<{ className: string }> = ({
   );
 };
 
-interface ContainerProps {}
+interface ContainerProps {
+  user?: User | null;
+}
 
-const ProfileInfoCard: React.FC<ContainerProps> = () => {
+const ProfileInfoCard: React.FC<ContainerProps> = ({ user }) => {
+  const maximumLevel = 5;
   return (
     <IonCard>
       <IonCardHeader>
-        <IonCardTitle>SY1</IonCardTitle>
+        <IonCardTitle>
+          <PlaceholderText width={120} height={24}>
+            {user?.name}
+          </PlaceholderText>
+        </IonCardTitle>
         <IonCardSubtitle>隊伍名稱</IonCardSubtitle>
       </IonCardHeader>
 
@@ -76,6 +90,25 @@ const ProfileInfoCard: React.FC<ContainerProps> = () => {
 
       <IonCardContent>
         <div className="profile-data-list">
+          <IonText color="medium" className="profile-data-item">
+            <h3 className="profile-data-title">等級</h3>
+            <div className="profile-data-datum">
+              <PlaceholderText width={30} height={22}>
+                {user?.level}
+              </PlaceholderText>
+            </div>
+            <h3 className="profile-data-unit">
+              {[...Array(user?.level).keys()].map(() => (
+                <IonIcon aria-hidden="true" icon={star} />
+              ))}
+              {[...Array(maximumLevel - (user?.level ?? 0)).keys()].map(() => (
+                <IonIcon aria-hidden="true" icon={starOutline} />
+              ))}
+            </h3>
+          </IonText>
+
+          <span className="profile-data-list-separator"></span>
+
           <IonText color="medium" className="profile-data-item">
             <h3 className="profile-data-title">攻擊力</h3>
             <div className="profile-data-datum">120</div>
@@ -94,16 +127,12 @@ const ProfileInfoCard: React.FC<ContainerProps> = () => {
 
           <IonText color="medium" className="profile-data-item">
             <h3 className="profile-data-title">現時佔領</h3>
-            <div className="profile-data-datum">4</div>
+            <div className="profile-data-datum">
+              <PlaceholderText width={30} height={22}>
+                {user?.capturedPoints.length}
+              </PlaceholderText>
+            </div>
             <h3 className="profile-data-unit">個點</h3>
-          </IonText>
-
-          <span className="profile-data-list-separator"></span>
-
-          <IonText color="medium" className="profile-data-item">
-            <h3 className="profile-data-title">升級了</h3>
-            <div className="profile-data-datum">2</div>
-            <h3 className="profile-data-unit">次</h3>
           </IonText>
         </div>
       </IonCardContent>

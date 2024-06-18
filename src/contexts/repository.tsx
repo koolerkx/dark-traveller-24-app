@@ -1,3 +1,8 @@
+import {
+  Firestore,
+  connectFirestoreEmulator,
+  getFirestore,
+} from "firebase/firestore";
 import React, {
   createContext,
   useCallback,
@@ -6,15 +11,12 @@ import React, {
   useState,
 } from "react";
 import PointRepository from "../repository/point";
+import UserRepository from "../repository/user";
 import { useFirebase } from "./firebase";
-import {
-  Firestore,
-  connectFirestoreEmulator,
-  getFirestore,
-} from "firebase/firestore";
 
 interface RepositoryContext {
   pointRepository: PointRepository | null;
+  userRepository: UserRepository | null;
 }
 
 export const RepositoryContext = createContext<RepositoryContext>({
@@ -29,6 +31,9 @@ export const RepositoryProvider = ({
   const [db, setDb] = useState<Firestore | null>(null);
   const [pointRepository, setPointRepository] =
     useState<PointRepository | null>(null);
+  const [userRepository, setUserRepository] = useState<UserRepository | null>(
+    null
+  );
 
   const { app } = useFirebase();
 
@@ -36,7 +41,6 @@ export const RepositoryProvider = ({
     useCallback(() => {
       if (!app) return;
 
-      console.log(process.env.FIREBASE_FIRESTORE_EMULATOR_HOST);
       const db = getFirestore(app);
 
       if (
@@ -52,12 +56,14 @@ export const RepositoryProvider = ({
 
       setDb(db);
       setPointRepository(new PointRepository(db));
+      setUserRepository(new UserRepository(db));
     }, [app, getFirestore, setDb, setPointRepository]),
     [app]
   );
 
   const returnValue = {
     pointRepository,
+    userRepository,
   };
 
   return (

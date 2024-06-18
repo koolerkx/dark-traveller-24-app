@@ -4,12 +4,18 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonToast,
 } from "@ionic/react";
 import { Point } from "../components/HomeCaptureCard";
 import ProfileInfoCard from "../components/ProfileInfoCard";
 import "../components/ProfileInfoCard.css";
 import ProfilePointList from "../components/ProfilePointList";
 import "./Home.css";
+import { useAuth } from "../contexts/auth";
+import { useRepository } from "../contexts/repository";
+import { useEffect, useState } from "react";
+import { User } from "../repository/user";
+import { checkmarkCircle, close } from "ionicons/icons";
 
 const Profile: React.FC = () => {
   const headerTitle = "隊伍狀態";
@@ -25,6 +31,39 @@ const Profile: React.FC = () => {
     { label: "濕地公園門口", level: 1 },
   ];
 
+  const _user = useAuth().user;
+  const [present] = useIonToast();
+
+  const { userRepository } = useRepository();
+
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    if (!_user?.email) return;
+    if (!userRepository) return;
+
+    userRepository
+      ?.getUser(_user.email)
+      .then(setUser)
+      .catch((error) => {
+        console.error(error);
+        present({
+          message: "出錯了！無法獲取攻擊點資料。",
+          duration: 1500,
+          icon: checkmarkCircle,
+          position: "bottom",
+          color: "warning",
+          swipeGesture: "vertical",
+          buttons: [
+            {
+              icon: close,
+              role: "cancel",
+            },
+          ],
+        });
+      });
+  }, [_user]);
+
   return (
     <IonPage>
       <IonHeader translucent={true}>
@@ -38,7 +77,7 @@ const Profile: React.FC = () => {
             <IonTitle size="large">{headerTitle}</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ProfileInfoCard />
+        <ProfileInfoCard user={user} />
         <ProfilePointList
           capturedPoints={capturedPoints}
           expiredPoints={expiredPoints}

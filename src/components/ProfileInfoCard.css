@@ -28,6 +28,9 @@
 .profile-data-list .profile-data-datum {
   font-size: 18px;
   font-weight: bold;
+
+  display: flex;
+  justify-content: center;
 }
 
 .profile-data-list-separator {
