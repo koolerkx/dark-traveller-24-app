@@ -8,12 +8,13 @@ import "./QRScanner.css";
 
 interface containerProps {
   pause: boolean;
+  onScan: (result: string) => void | Promise<void>;
 }
 
-const QRScanner: React.FC<containerProps> = ({ pause = false }) => {
-  const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
-  const devices = useDevices();
-
+const QRScanner: React.FC<containerProps> = ({
+  pause = false,
+  onScan: _onScan,
+}) => {
   const scanSize = 300; //px
   const borderWidth = 5; //px
   const borderColor = "#ffffff";
@@ -21,7 +22,21 @@ const QRScanner: React.FC<containerProps> = ({ pause = false }) => {
   const onScan = useCallback((results: IDetectedBarcode[]) => {
     const result = results[0];
 
-    console.log(result);
+    const center = [
+      result.boundingBox.x + result.boundingBox.width / 2,
+      result.boundingBox.y + result.boundingBox.height / 2,
+    ];
+
+    // center inside scan box
+    if (
+      center[0] < margin.left + scanSize &&
+      center[0] > margin.left &&
+      center[1] < margin.top + scanSize &&
+      center[1] > margin.top
+    ) {
+      _onScan(result.rawValue);
+    }
+    return;
   }, []);
 
   const margin = useMemo(() => {
@@ -52,7 +67,7 @@ const QRScanner: React.FC<containerProps> = ({ pause = false }) => {
     <Scanner
       onScan={onScan}
       formats={["qr_code"]}
-      allowMultiple={false}
+      allowMultiple={true}
       scanDelay={500}
       components={{
         audio: false,
@@ -64,9 +79,6 @@ const QRScanner: React.FC<containerProps> = ({ pause = false }) => {
           height: "100%",
           width: "auto",
         },
-      }}
-      constraints={{
-        deviceId: deviceId,
       }}
     >
       <div
