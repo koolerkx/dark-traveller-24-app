@@ -4,12 +4,12 @@ import "leaflet/dist/leaflet.css";
 import { useCallback, useEffect, useState } from "react";
 import MapComponent from "../components/MapComponent";
 import { useRepository } from "../contexts/repository";
-import { Point } from "../types/point";
+import { PointWithStatus } from "../repository/point";
 import "./Map.css";
 
 const Map: React.FC = () => {
   // const headerTitle = "地圖";
-  const [points, setPoints] = useState<Point[]>([]);
+  const [points, setPoints] = useState<PointWithStatus[]>([]);
   const [present] = useIonToast();
 
   const { pointRepository } = useRepository();

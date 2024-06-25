@@ -1,3 +1,4 @@
+import { differenceInSeconds, isAfter } from "date-fns";
 import {
   Firestore,
   QueryDocumentSnapshot,
@@ -7,8 +8,7 @@ import {
   query,
 } from "firebase/firestore";
 import { FirestoreRepository } from "./repository";
-import { User, userConverter } from "./user";
-import { isAfter } from "date-fns";
+import { CAPTURED_POINT_COOLDOWN_SECONDS, User, userConverter } from "./user";
 
 export interface Point {
   id: string;
@@ -22,7 +22,15 @@ export interface Point {
   isPublic: boolean;
 }
 
+export enum PointStatus {
+  NEW = "new",
+  CAPTURED = "captured",
+  EXPIRED = "expired",
+  CLEARED = "cleared",
+}
+
 export interface PointWithStatus extends Point {
+  status: PointStatus;
   capturedInfo: {
     capturedAt: Date | null;
     capturedByUser: User | null;
@@ -39,6 +47,20 @@ export interface CapturedPoint {
   createdAt: Date;
   expiredAt: Date | null;
 }
+
+const parsePointStatus = (point: CapturedPoint | null): PointStatus => {
+  if (!point) return PointStatus.NEW;
+
+  if (!!point.expiredAt) return PointStatus.CLEARED;
+
+  const secondsSinceCaptured = differenceInSeconds(new Date(), point.createdAt);
+
+  const isInCooldown = secondsSinceCaptured < CAPTURED_POINT_COOLDOWN_SECONDS;
+
+  if (isInCooldown) return PointStatus.CAPTURED;
+
+  return PointStatus.EXPIRED;
+};
 
 const pointConverter = {
   toFirestore: (point: Point) => {
@@ -102,16 +124,19 @@ class PointRepository extends FirestoreRepository {
     const pointsQuerySnapshot = await getDocs(_pointQuery);
     const points = pointsQuerySnapshot.docs.map((it) => it.data());
 
-    const result = points.map((it) => ({
-      ...it,
-      capturedInfo: !!capturedPoint[it.id]
-        ? {
-            capturedAt: capturedPoint[it.id].createdAt,
-            capturedByUser: userMap[capturedPoint[it.id].userId],
-            expiredAt: capturedPoint[it.id].expiredAt,
-          }
-        : null,
-    }));
+    const result = points.map((it) => {
+      return {
+        ...it,
+        status: parsePointStatus(capturedPoint[it.id]),
+        capturedInfo: !!capturedPoint[it.id]
+          ? {
+              capturedAt: capturedPoint[it.id].createdAt,
+              capturedByUser: userMap[capturedPoint[it.id].userId],
+              expiredAt: capturedPoint[it.id].expiredAt,
+            }
+          : null,
+      };
+    });
 
     return result;
   }

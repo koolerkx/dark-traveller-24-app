@@ -1,14 +1,15 @@
+import { IonImg, IonText, useIonToast } from "@ionic/react";
 import type { GeoJsonObject } from "geojson";
-import { Map } from "leaflet";
+import { Icon, Map } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
 import { GeoJSON, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { PointStatus, PointWithStatus } from "../repository/point";
 import "./MapComponent.css";
-import { IonImg, useIonToast } from "@ionic/react";
-import { Point } from "../types/point";
+import { differenceInSeconds } from "date-fns";
 
 interface ContainerProps {
-  points: Point[];
+  points: PointWithStatus[];
 }
 
 const MapComponent: React.FC<ContainerProps> = ({ points }) => {
@@ -47,11 +48,44 @@ const MapComponent: React.FC<ContainerProps> = ({ points }) => {
     }, 0);
   }, [map]);
 
-  const makePointMarker = (point: Point) => {
+  const makePointMarker = (point: PointWithStatus) => {
+    const iconUrl = {
+      [PointStatus.NEW]: "/icon/marker_new.svg",
+      [PointStatus.CAPTURED]: "/icon/marker_captured.svg",
+      [PointStatus.EXPIRED]: "/icon/marker_available.svg",
+      [PointStatus.CLEARED]: "/icon/marker_available.svg",
+    };
+
+    const statusText = {
+      [PointStatus.NEW]: "未被任何人佔領",
+      [PointStatus.CAPTURED]: "被佔領中",
+      [PointStatus.EXPIRED]: "可佔領",
+      [PointStatus.CLEARED]: "可佔領",
+    };
+
+    const statusColor = {
+      [PointStatus.NEW]: "primary",
+      [PointStatus.CAPTURED]: "danger",
+      [PointStatus.EXPIRED]: "success",
+      [PointStatus.CLEARED]: "success",
+    };
+
+    const secondsSinceCaptured =
+      !!point.capturedInfo && !!point.capturedInfo.capturedAt
+        ? differenceInSeconds(new Date(), point.capturedInfo.capturedAt)
+        : 0;
+
     return (
       <Marker
         position={[point.location.lat, point.location.long]}
         key={point.id}
+        icon={
+          new Icon({
+            iconUrl: iconUrl[point.status],
+            iconSize: [48, 48],
+            shadowAnchor: [0, 0],
+          })
+        }
       >
         <Popup>
           <h3>{point.point}</h3>
@@ -62,7 +96,22 @@ const MapComponent: React.FC<ContainerProps> = ({ points }) => {
               className="marker-image"
             />
           ) : null}
-          <p>{point.description}</p>
+
+          <div className="popup-description-container">
+            <div>
+              <IonText color={statusColor[point.status]}>
+                {statusText[point.status]}
+              </IonText>
+            </div>
+            {point.status === PointStatus.CAPTURED ||
+            point.status === PointStatus.EXPIRED ? (
+              <div>
+                <IonText>
+                  已佔領時間：{`${secondsSinceCaptured}/${360}`}秒
+                </IonText>
+              </div>
+            ) : null}
+          </div>
         </Popup>
       </Marker>
     );
@@ -88,7 +137,7 @@ const MapComponent: React.FC<ContainerProps> = ({ points }) => {
         <GeoJSON
           data={cycleTrackData}
           pathOptions={{
-            color: "#cb1a27",
+            color: "#474555",
           }}
         />
       ) : null}
