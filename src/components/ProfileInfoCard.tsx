@@ -75,6 +75,10 @@ interface ContainerProps {
 
 const ProfileInfoCard: React.FC<ContainerProps> = ({ user }) => {
   const maximumLevel = 5;
+
+  const capturedPointCount =
+    user?.capturedPoints.filter((it) => !it.expiredAt).length ?? 0;
+
   return (
     <IonCard>
       <IonCardHeader>
@@ -129,7 +133,7 @@ const ProfileInfoCard: React.FC<ContainerProps> = ({ user }) => {
             <h3 className="profile-data-title">現時佔領</h3>
             <div className="profile-data-datum">
               <PlaceholderText width={30} height={22}>
-                {user?.capturedPoints.length}
+                {capturedPointCount}
               </PlaceholderText>
             </div>
             <h3 className="profile-data-unit">個點</h3>
