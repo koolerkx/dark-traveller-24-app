@@ -19,7 +19,7 @@ const Map: React.FC = () => {
       if (!pointRepository) return;
 
       pointRepository
-        .getPoints()
+        .getPointsWithCapturedInfo()
         .then((data) => {
           setPoints(data);
         })

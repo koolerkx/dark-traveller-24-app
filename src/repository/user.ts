@@ -46,7 +46,7 @@ const parseCapturedPoint = {
   }),
 };
 
-const userConverter = {
+export const userConverter = {
   toFirestore: (user: User) => {
     return {
       email: user.email,
