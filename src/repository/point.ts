@@ -39,8 +39,8 @@ export interface PointWithStatus extends Point {
 }
 
 export interface CapturedPoint {
-  id: string;
   pointId: string;
+  pointName: string;
   userId: string;
   userName: string;
   level: number;
@@ -62,7 +62,7 @@ const parsePointStatus = (point: CapturedPoint | null): PointStatus => {
   return PointStatus.EXPIRED;
 };
 
-const pointConverter = {
+export const pointConverter = {
   toFirestore: (point: Point) => {
     return {
       point: point.point,

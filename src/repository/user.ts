@@ -4,6 +4,8 @@ import {
   QueryDocumentSnapshot,
   SnapshotOptions,
   collection,
+  doc,
+  getDoc,
   getDocs,
   limit,
   query,
@@ -11,7 +13,7 @@ import {
   where,
 } from "firebase/firestore";
 import { CapturedPointInCooldownError } from "../error";
-import { CapturedPoint } from "./point";
+import { CapturedPoint, pointConverter } from "./point";
 import { FirestoreRepository } from "./repository";
 
 // 5 minutes
@@ -38,6 +40,7 @@ const parseCapturedPoint = {
     string | number | boolean | null
   > => ({
     pointId: point.pointId,
+    pointName: point.pointName,
     userId: point.userId,
     userName: point.userName,
     level: point.level,
@@ -70,6 +73,9 @@ export const userConverter = {
 
 class UserRepository extends FirestoreRepository {
   private userRef = collection(this.db, "users").withConverter(userConverter);
+  private pointsRef = collection(this.db, "points").withConverter(
+    pointConverter
+  );
 
   constructor(db: Firestore) {
     super(db);
@@ -89,6 +95,16 @@ class UserRepository extends FirestoreRepository {
       const now = new Date();
 
       const usersQuerySnapshot = await getDocs(this.userRef);
+      // get point by id
+      const targetPointInfo = (
+        await getDoc(
+          doc(this.db, "points", pointId).withConverter(pointConverter)
+        )
+      ).data();
+
+      if (!targetPointInfo) {
+        throw new Error("Point not found");
+      }
 
       // Clear last captured point
       const users = await usersQuerySnapshot.docs.map((it) => it.data());
@@ -121,7 +137,9 @@ class UserRepository extends FirestoreRepository {
           const updatedCapturedPoint = lastCapturedPointUserSnapshot
             .data()
             .capturedPoints.map((it) =>
-              it.id === lastCapturedPoint.id ? { ...it, expiredAt: now } : it
+              it.pointId === lastCapturedPoint.pointId
+                ? { ...it, expiredAt: now }
+                : it
             )
             .map(parseCapturedPoint.toFirestore);
 
@@ -142,12 +160,15 @@ class UserRepository extends FirestoreRepository {
         capturedPoints: [
           ...currentUserSnapshot
             .data()
-            .capturedPoints.map((it) =>
-              it.id === lastCapturedPoint?.id ? { ...it, expiredAt: now } : it
-            )
+            .capturedPoints.map((it) => {
+              return it.pointId === lastCapturedPoint?.pointId
+                ? { ...it, expiredAt: now }
+                : it;
+            })
             .map(parseCapturedPoint.toFirestore),
           parseCapturedPoint.toFirestore({
             pointId: pointId,
+            pointName: targetPointInfo.point,
             userId: user.id,
             userName: user.name,
             level: user.level,
