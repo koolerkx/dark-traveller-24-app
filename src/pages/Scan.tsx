@@ -55,8 +55,8 @@ const Scan: React.FC = () => {
         await userRepository.capturePoint(user, param);
       }
     } catch (error) {
+      resetOnDismiss = true;
       if (error instanceof CapturedPointInCooldownError) {
-        resetOnDismiss = true;
         presentAlert({
           header: "攻擊點處於保護狀態",
           subHeader: `剩餘時間：${error.secondsSincecaptured} / ${CAPTURED_POINT_COOLDOWN_SECONDS}秒`,
