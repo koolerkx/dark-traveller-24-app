@@ -10,6 +10,7 @@ import {
   IonNote,
 } from "@ionic/react";
 import "./HomeCaptureCard.css";
+import { CapturedPoint } from "../repository/point";
 
 export type Point = { label: string; level?: number };
 
@@ -21,16 +22,11 @@ export const PointChip: React.FC<{
   </IonChip>
 );
 
-interface ContainerProps {}
+interface ContainerProps {
+  capturedPoints: CapturedPoint[];
+}
 
-const HomeCaptureCard: React.FC<ContainerProps> = () => {
-  const points: Point[] = [
-    { label: "天瑞體育館" },
-    { label: "天水圍運動場" },
-    { label: "濕地公園門口" },
-    { label: "天水圍單車匯合中心" },
-  ];
-
+const HomeCaptureCard: React.FC<ContainerProps> = ({ capturedPoints }) => {
   return (
     <IonCard className="capture-card">
       <IonCardHeader>
@@ -45,8 +41,8 @@ const HomeCaptureCard: React.FC<ContainerProps> = () => {
         </IonList>
 
         <div className="capture-card-point-list">
-          {points.map((point) => (
-            <PointChip key={point.label} label={point.label} />
+          {capturedPoints.map((point) => (
+            <PointChip key={point.pointId} label={point.pointName} />
           ))}
         </div>
       </IonCardContent>
