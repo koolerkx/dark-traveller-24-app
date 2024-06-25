@@ -103,7 +103,7 @@ class UserRepository extends FirestoreRepository {
       ).data();
 
       if (!targetPointInfo) {
-        throw new Error("Point not found");
+        throw new Error(`Point not found, id: ${pointId}`);
       }
 
       // Clear last captured point
