@@ -21,6 +21,7 @@ interface RepositoryContext {
 
 export const RepositoryContext = createContext<RepositoryContext>({
   pointRepository: null,
+  userRepository: null,
 });
 
 export const RepositoryProvider = ({

@@ -3,8 +3,8 @@ import {
   QueryDocumentSnapshot,
   SnapshotOptions,
   collection,
-  query,
   getDocs,
+  query,
 } from "firebase/firestore";
 import { FirestoreRepository } from "./repository";
 
@@ -18,6 +18,16 @@ export interface Point {
     long: number;
   };
   isPublic: boolean;
+}
+
+export interface CapturedPoint {
+  id: string;
+  pointId: string;
+  userId: string;
+  userName: string;
+  level: number;
+  createdAt: Date;
+  expiredAt: Date | null;
 }
 
 const pointConverter = {
