@@ -9,6 +9,7 @@ import {
 } from "@ionic/react";
 import { Point } from "./HomeCaptureCard";
 import "./ProfilePointList.css";
+import { CapturedPoint } from "../repository/point";
 
 const LevelChip: React.FC<{ level?: number }> = ({ level }) => {
   switch (level) {
@@ -28,8 +29,8 @@ const LevelChip: React.FC<{ level?: number }> = ({ level }) => {
 };
 
 interface ContainerProps {
-  capturedPoints: Point[];
-  expiredPoints: Point[];
+  capturedPoints: CapturedPoint[];
+  expiredPoints: CapturedPoint[];
 }
 
 const ProfilePointList: React.FC<ContainerProps> = ({
@@ -46,26 +47,42 @@ const ProfilePointList: React.FC<ContainerProps> = ({
         <IonNote className="text-ellipsis">正在為你提供攻擊力</IonNote>
       </IonItemDivider>
 
-      {capturedPoints.map((point) => (
-        <IonItem key={point.label}>
-          <IonLabel>{point.label}</IonLabel>
-          {/* <IonLabel className="level">等級 1</IonLabel> */}
+      {capturedPoints.length > 0 ? (
+        <>
+          {capturedPoints.map((point) => (
+            <IonItem key={point.pointId}>
+              <IonLabel>{point.pointName}</IonLabel>
+              {/* <IonLabel className="level">等級 1</IonLabel> */}
 
-          <LevelChip level={point.level} />
-        </IonItem>
-      ))}
+              <LevelChip level={point.level} />
+            </IonItem>
+          ))}
+        </>
+      ) : (
+        <>
+          <IonItem>
+            <IonNote className="text-ellipsis">
+              沒有正在佔領的攻擊點，你可以到地圖查看攻擊點的位置。
+            </IonNote>
+          </IonItem>
+        </>
+      )}
 
-      <IonItemDivider>
-        <IonLabel>已失效</IonLabel>
-        <IonNote className="text-ellipsis">你可以重新佔領這些點</IonNote>
-      </IonItemDivider>
+      {expiredPoints.length > 0 ? (
+        <>
+          <IonItemDivider>
+            <IonLabel>已失效</IonLabel>
+            <IonNote className="text-ellipsis">你可以重新佔領這些點</IonNote>
+          </IonItemDivider>
 
-      {expiredPoints.map((point) => (
-        <IonItem key={point.label}>
-          <IonLabel>{point.label}</IonLabel>
-          <LevelChip level={point.level} />
-        </IonItem>
-      ))}
+          {expiredPoints.map((point) => (
+            <IonItem key={point.pointId}>
+              <IonLabel>{point.pointName}</IonLabel>
+              <LevelChip level={point.level} />
+            </IonItem>
+          ))}
+        </>
+      ) : null}
     </IonList>
   );
 };

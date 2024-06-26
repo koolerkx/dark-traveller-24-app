@@ -8,7 +8,7 @@ import {
   useIonViewDidEnter,
 } from "@ionic/react";
 import { checkmarkCircle, close } from "ionicons/icons";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Point } from "../components/HomeCaptureCard";
 import ProfileInfoCard from "../components/ProfileInfoCard";
 import "../components/ProfileInfoCard.css";
@@ -17,20 +17,11 @@ import { useAuth } from "../contexts/auth";
 import { useRepository } from "../contexts/repository";
 import { User } from "../repository/user";
 import "./Home.css";
+import { CapturedPoint } from "../repository/point";
+import { isAfter } from "date-fns";
 
 const Profile: React.FC = () => {
   const headerTitle = "隊伍狀態";
-
-  const capturedPoints: Point[] = [
-    { label: "天瑞體育館", level: 5 },
-    { label: "天水圍運動場", level: 4 },
-  ];
-
-  const expiredPoints: Point[] = [
-    { label: "天瑞體育館", level: 3 },
-    { label: "天水圍運動場", level: 2 },
-    { label: "濕地公園門口", level: 1 },
-  ];
 
   const _user = useAuth().user;
   const [presentToast] = useIonToast();
@@ -38,6 +29,29 @@ const Profile: React.FC = () => {
   const { userRepository } = useRepository();
 
   const [user, setUser] = useState<User | null>(null);
+
+  const capturedPoints = useMemo(
+    () => user?.capturedPoints.filter((it) => it.expiredAt === null) ?? [],
+    [user?.capturedPoints]
+  );
+  const expiredPoints = useMemo(
+    () =>
+      Object.values(
+        user?.capturedPoints.reduce(
+          (acc, cur) => ({
+            ...acc,
+            [cur.pointId]: isAfter(
+              cur.createdAt,
+              acc[cur.pointId]?.createdAt ?? 0
+            )
+              ? cur
+              : acc[cur.pointId] || cur,
+          }),
+          {} as Record<string, CapturedPoint>
+        ) ?? {}
+      ).filter((it) => !!it.expiredAt),
+    [user?.capturedPoints]
+  );
 
   const loadUser = () => {
     if (!_user?.email) return;
