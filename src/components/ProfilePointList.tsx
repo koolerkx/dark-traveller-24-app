@@ -1,5 +1,4 @@
 import {
-  IonChip,
   IonItem,
   IonItemDivider,
   IonLabel,
@@ -7,26 +6,9 @@ import {
   IonListHeader,
   IonNote,
 } from "@ionic/react";
-import { Point } from "./HomeCaptureCard";
-import "./ProfilePointList.css";
 import { CapturedPoint } from "../repository/point";
-
-const LevelChip: React.FC<{ level?: number }> = ({ level }) => {
-  switch (level) {
-    case 1:
-      return <IonChip color="medium">等級 {level}</IonChip>;
-    case 2:
-      return <IonChip color="success">等級 {level}</IonChip>;
-    case 3:
-      return <IonChip color="primary">等級 {level}</IonChip>;
-    case 4:
-      return <IonChip color="tertiary">等級 {level}</IonChip>;
-    case 5:
-      return <IonChip color="danger">等級 {level}</IonChip>;
-    default:
-      return <IonChip color="medium">等級 {level}</IonChip>;
-  }
-};
+import { LevelChip } from "./LevelChip";
+import "./ProfilePointList.css";
 
 interface ContainerProps {
   capturedPoints: CapturedPoint[];

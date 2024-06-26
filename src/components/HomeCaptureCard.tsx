@@ -7,17 +7,18 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonNote,
 } from "@ionic/react";
-import "./HomeCaptureCard.css";
 import { CapturedPoint } from "../repository/point";
+import "./HomeCaptureCard.css";
+import { levelColor } from "./LevelChip";
 
 export type Point = { label: string; level?: number };
 
 export const PointChip: React.FC<{
   label: string;
-}> = ({ label }) => (
-  <IonChip color="primary">
+  level: number;
+}> = ({ label, level }) => (
+  <IonChip color={levelColor[level.toString()]}>
     <div className="text-ellipsis">{label}</div>
   </IonChip>
 );
@@ -42,7 +43,11 @@ const HomeCaptureCard: React.FC<ContainerProps> = ({ capturedPoints }) => {
 
         <div className="capture-card-point-list">
           {capturedPoints.map((point) => (
-            <PointChip key={point.pointId} label={point.pointName} />
+            <PointChip
+              key={point.pointId}
+              label={point.pointName}
+              level={point.level}
+            />
           ))}
         </div>
       </IonCardContent>
