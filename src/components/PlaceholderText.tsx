@@ -15,6 +15,9 @@ export const PlaceholderText: React.FC<Props> = ({
   return children != null && children !== undefined ? (
     children
   ) : (
-    <IonSkeletonText style={{ width: `${width}px`, height: `${height}px` }} />
+    <IonSkeletonText
+      style={{ width: `${width}px`, height: `${height}px` }}
+      animated={true}
+    />
   );
 };
