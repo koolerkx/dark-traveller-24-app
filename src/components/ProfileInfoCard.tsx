@@ -102,12 +102,18 @@ const ProfileInfoCard: React.FC<ContainerProps> = ({ user }) => {
               </PlaceholderText>
             </div>
             <h3 className="profile-data-unit">
-              {[...Array(user?.level).keys()].map(() => (
-                <IonIcon aria-hidden="true" icon={star} />
+              {[...Array(user?.level).keys()].map((_elm, idx) => (
+                <IonIcon aria-hidden="true" icon={star} key={`star${idx}`} />
               ))}
-              {[...Array(maximumLevel - (user?.level ?? 0)).keys()].map(() => (
-                <IonIcon aria-hidden="true" icon={starOutline} />
-              ))}
+              {[...Array(maximumLevel - (user?.level ?? 0)).keys()].map(
+                (_elm, idx) => (
+                  <IonIcon
+                    aria-hidden="true"
+                    icon={starOutline}
+                    key={`star-outline${idx}`}
+                  />
+                )
+              )}
             </h3>
           </IonText>
 
