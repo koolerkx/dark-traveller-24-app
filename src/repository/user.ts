@@ -115,7 +115,10 @@ class UserRepository extends FirestoreRepository {
     });
   }
 
-  public async capturePoint(user: User, pointId: string): Promise<void> {
+  public async capturePoint(
+    user: User,
+    pointId: string
+  ): Promise<CapturedPoint> {
     const capturedPoint = await runTransaction(this.db, async (transaction) => {
       const now = new Date();
 
@@ -181,6 +184,16 @@ class UserRepository extends FirestoreRepository {
 
       if (!currentUserSnapshot) throw new Error("User not found");
 
+      const newCapturedPoint = {
+        pointId: pointId,
+        pointName: targetPointInfo.point,
+        userId: user.id,
+        userName: user.name,
+        level: user.level,
+        createdAt: now,
+        expiredAt: null,
+      };
+
       transaction.update(currentUserSnapshot.ref, {
         capturedPoints: [
           ...currentUserSnapshot
@@ -191,18 +204,14 @@ class UserRepository extends FirestoreRepository {
                 : it;
             })
             .map(parseCapturedPoint.toFirestore),
-          parseCapturedPoint.toFirestore({
-            pointId: pointId,
-            pointName: targetPointInfo.point,
-            userId: user.id,
-            userName: user.name,
-            level: user.level,
-            createdAt: now,
-            expiredAt: null,
-          }),
+          parseCapturedPoint.toFirestore(newCapturedPoint),
         ],
       });
+
+      return newCapturedPoint;
     });
+
+    return capturedPoint;
   }
 }
 

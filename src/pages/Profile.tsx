@@ -7,16 +7,16 @@ import {
   useIonToast,
   useIonViewDidEnter,
 } from "@ionic/react";
+import { checkmarkCircle, close } from "ionicons/icons";
+import { useState } from "react";
 import { Point } from "../components/HomeCaptureCard";
 import ProfileInfoCard from "../components/ProfileInfoCard";
 import "../components/ProfileInfoCard.css";
 import ProfilePointList from "../components/ProfilePointList";
-import "./Home.css";
 import { useAuth } from "../contexts/auth";
 import { useRepository } from "../contexts/repository";
-import { useEffect, useState } from "react";
 import { User } from "../repository/user";
-import { checkmarkCircle, close } from "ionicons/icons";
+import "./Home.css";
 
 const Profile: React.FC = () => {
   const headerTitle = "隊伍狀態";
@@ -33,7 +33,7 @@ const Profile: React.FC = () => {
   ];
 
   const _user = useAuth().user;
-  const [present] = useIonToast();
+  const [presentToast] = useIonToast();
 
   const { userRepository } = useRepository();
 
@@ -48,7 +48,7 @@ const Profile: React.FC = () => {
       .then(setUser)
       .catch((error) => {
         console.error(error);
-        present({
+        presentToast({
           message: "出錯了！無法獲取攻擊點資料。",
           duration: 1500,
           icon: checkmarkCircle,

@@ -65,12 +65,34 @@ const Scan: React.FC = () => {
       const user = await userRepository.getUser(authedUser.email);
 
       if (!!pointParam) {
-        await userRepository.capturePoint(user, pointParam);
+        const capturedPoint = await userRepository.capturePoint(
+          user,
+          pointParam
+        );
+
+        resetOnDismiss = true;
+
+        await presentAlert({
+          header: `佔領成功！`,
+          subHeader: `佔領了【${capturedPoint.pointName}】`,
+          buttons: ["關閉訊息"],
+          onDidDismiss: () => {
+            router.push("/profile", "none", "push");
+          },
+        });
       } else if (!!upgradeParam) {
         await userRepository.upgradeUser(user, upgradeParam);
-      }
 
-      router.push("/profile", "none", "push");
+        resetOnDismiss = true;
+
+        await presentAlert({
+          header: `升級成功！`,
+          buttons: ["關閉訊息"],
+          onDidDismiss: () => {
+            router.push("/profile", "none", "push");
+          },
+        });
+      }
     } catch (error) {
       resetOnDismiss = true;
 
