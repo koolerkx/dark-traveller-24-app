@@ -7,6 +7,7 @@ import {
   IonItem,
   IonLabel,
   IonList,
+  IonNote,
   IonSpinner,
 } from "@ionic/react";
 import { CapturedPoint } from "../repository/point";
@@ -37,7 +38,7 @@ const HomeCaptureCard: React.FC<ContainerProps> = ({ capturedPoints }) => {
         <IonCardTitle>佔領中</IonCardTitle>
       </IonCardHeader>
       <IonCardContent>
-        <IonList inset={true} lines="full">
+        <IonList inset={true} lines="full" className="capture-card-info-list">
           <IonItem className="capture-card-info-dps">
             <IonLabel>每秒攻擊力 DPS</IonLabel>
             <IonLabel className="capture-card-info-dps-text">
@@ -49,15 +50,22 @@ const HomeCaptureCard: React.FC<ContainerProps> = ({ capturedPoints }) => {
         </IonList>
 
         {!!capturedPoints ? (
-          <div className="capture-card-point-list">
-            {capturedPoints.map((point) => (
-              <PointChip
-                key={point.pointId}
-                label={point.pointName}
-                level={point.level}
-              />
-            ))}
-          </div>
+          capturedPoints.length > 0 ? (
+            <div className="capture-card-point-list">
+              {capturedPoints.map((point) => (
+                <PointChip
+                  key={point.pointId}
+                  label={point.pointName}
+                  level={point.level}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="capture-card-point-none-hint">
+              <p>沒有正在佔領的攻擊點</p>
+              <p>提示：你可以到地圖查看攻擊點的位置。</p>
+            </div>
+          )
         ) : (
           <div className="capture-card-point-loading">
             <IonSpinner name="dots" />

@@ -8,6 +8,8 @@
   grid-template-columns: repeat(2, 1fr);
   row-gap: 0.5rem;
   column-gap: 0.5rem;
+
+  margin-top: 16px;
 }
 
 .capture-card ion-chip {
@@ -19,6 +21,7 @@
   margin-top: 0 !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .capture-card ion-label:nth-child(2n) {
@@ -40,4 +43,12 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+
+  margin-top: 16px;
+}
+
+.capture-card-point-none-hint {
+  text-align: center;
+
+  margin-top: 16px;
 }
