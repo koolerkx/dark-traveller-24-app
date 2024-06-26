@@ -27,7 +27,7 @@ const RankingItem: React.FC<{
       </IonItem>
       <div className="ion-padding ranking-point-list" slot="content">
         {points.map((point) => (
-          <PointChip key={point.label} label={point.label} />
+          <PointChip key={point.label} label={point.label} level={0} />
         ))}
       </div>
     </IonAccordion>
