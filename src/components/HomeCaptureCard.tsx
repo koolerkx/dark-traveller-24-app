@@ -28,7 +28,7 @@ export const PointChip: React.FC<{
 );
 
 interface ContainerProps {
-  capturedPoints: CapturedPoint[] | null;
+  capturedPoints: CapturedPoint[] | null | undefined;
 }
 
 const HomeCaptureCard: React.FC<ContainerProps> = ({ capturedPoints }) => {
