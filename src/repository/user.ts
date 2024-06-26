@@ -10,14 +10,19 @@ import {
   limit,
   query,
   runTransaction,
+  updateDoc,
   where,
 } from "firebase/firestore";
-import { CapturedPointInCooldownError } from "../error";
+import {
+  CapturedPointInCooldownError,
+  MaximumLevelAchievedError,
+} from "../error";
 import { CapturedPoint, pointConverter } from "./point";
 import { FirestoreRepository } from "./repository";
 
 // 5 minutes
 export const CAPTURED_POINT_COOLDOWN_SECONDS = 60;
+export const USER_MAXIMUM_LEVEL = 5;
 
 export interface User {
   id: string;
@@ -88,6 +93,22 @@ class UserRepository extends FirestoreRepository {
     const users = await querySnapshot.docs.map((it) => it.data());
 
     return users[0];
+  }
+
+  public async upgradeUser(email: string): Promise<void> {
+    const userRef = doc(this.userRef, email);
+
+    const user = (await getDoc(userRef)).data();
+
+    if (!user) {
+      throw new Error(`User not found, email: ${email}`);
+    }
+
+    if (user.level >= USER_MAXIMUM_LEVEL) {
+      throw new MaximumLevelAchievedError(user.level);
+    }
+
+    await updateDoc(userRef, { level: user.level + 1 });
   }
 
   public async capturePoint(user: User, pointId: string): Promise<void> {
