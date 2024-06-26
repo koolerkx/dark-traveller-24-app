@@ -7,18 +7,17 @@ import {
   useIonToast,
   useIonViewDidEnter,
 } from "@ionic/react";
+import { isAfter } from "date-fns";
 import { checkmarkCircle, close } from "ionicons/icons";
 import { useMemo, useState } from "react";
-import { Point } from "../components/HomeCaptureCard";
 import ProfileInfoCard from "../components/ProfileInfoCard";
 import "../components/ProfileInfoCard.css";
 import ProfilePointList from "../components/ProfilePointList";
 import { useAuth } from "../contexts/auth";
 import { useRepository } from "../contexts/repository";
+import { CapturedPoint } from "../repository/point";
 import { User } from "../repository/user";
 import "./Home.css";
-import { CapturedPoint } from "../repository/point";
-import { isAfter } from "date-fns";
 
 const Profile: React.FC = () => {
   const headerTitle = "隊伍狀態";
