@@ -16,8 +16,9 @@ import {
 import {
   CapturedPointInCooldownError,
   MaximumLevelAchievedError,
+  UpgradePointAlreadyAppliedError,
 } from "../error";
-import { CapturedPoint, pointConverter } from "./point";
+import { CapturedPoint, UpgradedPoint, pointConverter } from "./point";
 import { FirestoreRepository } from "./repository";
 
 // 5 minutes
@@ -30,6 +31,7 @@ export interface User {
   level: number;
   name: string;
   capturedPoints: CapturedPoint[];
+  upgradedPoints: UpgradedPoint[];
 }
 
 const parseCapturedPoint = {
@@ -61,6 +63,7 @@ export const userConverter = {
       level: user.level,
       name: user.name,
       capturedPoints: user.capturedPoints.map(parseCapturedPoint.toFirestore),
+      upgradedPoints: user.upgradedPoints,
     };
   },
   fromFirestore: (
@@ -71,6 +74,7 @@ export const userConverter = {
     return {
       ...data,
       capturedPoints: data.capturedPoints.map(parseCapturedPoint.fromFirestore),
+      level: data.upgradedPoints.length + 1,
       id: snapshot.id,
     };
   },
@@ -95,20 +99,20 @@ class UserRepository extends FirestoreRepository {
     return users[0];
   }
 
-  public async upgradeUser(email: string): Promise<void> {
-    const userRef = doc(this.userRef, email);
-
-    const user = (await getDoc(userRef)).data();
-
-    if (!user) {
-      throw new Error(`User not found, email: ${email}`);
-    }
+  public async upgradeUser(user: User, upgradePointId: string): Promise<void> {
+    const userRef = doc(this.userRef, user.email);
 
     if (user.level >= USER_MAXIMUM_LEVEL) {
       throw new MaximumLevelAchievedError(user.level);
     }
 
-    await updateDoc(userRef, { level: user.level + 1 });
+    if (user.upgradedPoints.find((it) => it === upgradePointId)) {
+      throw new UpgradePointAlreadyAppliedError(upgradePointId);
+    }
+
+    await updateDoc(userRef, {
+      upgradedPoints: [...user.upgradedPoints, upgradePointId],
+    });
   }
 
   public async capturePoint(user: User, pointId: string): Promise<void> {

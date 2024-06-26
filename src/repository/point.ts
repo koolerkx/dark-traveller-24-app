@@ -62,6 +62,8 @@ const parsePointStatus = (point: CapturedPoint | null): PointStatus => {
   return PointStatus.EXPIRED;
 };
 
+export type UpgradedPoint = string;
+
 export const pointConverter = {
   toFirestore: (point: Point) => {
     return {

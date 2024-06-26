@@ -16,11 +16,21 @@ export class CapturedPointInCooldownError extends Error {
 }
 
 export class MaximumLevelAchievedError extends Error {
-  private level: number;
+  public level: number;
 
   constructor(level: number) {
     super(`Maximum level achieved: ${level}/${USER_MAXIMUM_LEVEL}`);
     this.level = level;
     this.name = "MaximumLevelAchievedError";
+  }
+}
+
+export class UpgradePointAlreadyAppliedError extends Error {
+  public upgradePointId: string;
+
+  constructor(upgradePointId: string) {
+    super(`Upgrade already applied: ${upgradePointId}`);
+    this.upgradePointId = upgradePointId;
+    this.name = "UpgradePointAlreadyAppliedError";
   }
 }

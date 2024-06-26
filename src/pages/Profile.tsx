@@ -5,6 +5,7 @@ import {
   IonTitle,
   IonToolbar,
   useIonToast,
+  useIonViewDidEnter,
 } from "@ionic/react";
 import { Point } from "../components/HomeCaptureCard";
 import ProfileInfoCard from "../components/ProfileInfoCard";
@@ -38,7 +39,7 @@ const Profile: React.FC = () => {
 
   const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
+  const loadUser = () => {
     if (!_user?.email) return;
     if (!userRepository) return;
 
@@ -62,7 +63,11 @@ const Profile: React.FC = () => {
           ],
         });
       });
-  }, [_user]);
+  };
+
+  useIonViewDidEnter(() => {
+    loadUser();
+  });
 
   return (
     <IonPage>
