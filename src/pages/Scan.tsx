@@ -12,6 +12,7 @@ import QRScanner from "../components/QRScanner";
 import { useAuth } from "../contexts/auth";
 import { useRepository } from "../contexts/repository";
 import {
+  CapturedPointAlreadyCapturedError,
   CapturedPointInCooldownError,
   UpgradePointAlreadyAppliedError,
 } from "../error";
@@ -111,6 +112,16 @@ const Scan: React.FC = () => {
         presentAlert({
           header: "已經升級了",
           message: `你已經在這個升級點進行升級，你可以尋找其他升級點進行升級！`,
+          buttons: ["關閉訊息"],
+          onDidDismiss: () => {
+            setIsCameraActive(true);
+            setIsLoading(false);
+          },
+        });
+      } else if (error instanceof CapturedPointAlreadyCapturedError) {
+        presentAlert({
+          header: "已經佔領了",
+          message: `你已經佔領了這個攻擊點，升級後再佔領！或者先到其他攻擊點進行佔領！`,
           buttons: ["關閉訊息"],
           onDidDismiss: () => {
             setIsCameraActive(true);

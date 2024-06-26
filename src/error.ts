@@ -15,6 +15,16 @@ export class CapturedPointInCooldownError extends Error {
   }
 }
 
+export class CapturedPointAlreadyCapturedError extends Error {
+  public pointId: string;
+
+  constructor(pointId: string) {
+    super(`Point already captured: ${pointId}`);
+    this.pointId = pointId;
+    this.name = "CapturedPointAlreadyCapturedError";
+  }
+}
+
 export class MaximumLevelAchievedError extends Error {
   public level: number;
 

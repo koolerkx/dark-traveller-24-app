@@ -14,6 +14,7 @@ import {
   where,
 } from "firebase/firestore";
 import {
+  CapturedPointAlreadyCapturedError,
   CapturedPointInCooldownError,
   MaximumLevelAchievedError,
   UpgradePointAlreadyAppliedError,
@@ -142,6 +143,15 @@ class UserRepository extends FirestoreRepository {
         .filter((it) => it.pointId === pointId)
         .find((it) => it.expiredAt === null);
 
+      // Check same user and same level
+      if (
+        !!lastCapturedPoint &&
+        lastCapturedPoint.userId === user.id &&
+        lastCapturedPoint.level === user.level
+      ) {
+        throw new CapturedPointAlreadyCapturedError(lastCapturedPoint.pointId);
+      }
+
       // Check last captured point is captured over 300 seconds
       const secondsSinceCaptured = differenceInSeconds(
         now,
@@ -155,8 +165,8 @@ class UserRepository extends FirestoreRepository {
         throw new CapturedPointInCooldownError(secondsSinceCaptured);
       }
 
-      // Clear other user last captured point
       if (!!lastCapturedPoint && lastCapturedPoint.userId !== user.id) {
+        // Clear other user last captured point
         const lastCapturedPointUserSnapshot = usersQuerySnapshot.docs.find(
           (it) => it.id === lastCapturedPoint.userId
         );
