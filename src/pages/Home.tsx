@@ -9,13 +9,14 @@ import {
   useIonViewDidEnter,
 } from "@ionic/react";
 import { checkmarkCircle, close } from "ionicons/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import HomeBossCard from "../components/HomeBossCard";
 import HomeCaptureCard from "../components/HomeCaptureCard";
 import { useAuth } from "../contexts/auth";
 import { useRepository } from "../contexts/repository";
 import { User } from "../repository/user";
 import "./Home.css";
+import { getBossInfo } from "../utils/boss";
 
 const Home: React.FC = () => {
   const headerTitle = "單車定向";
@@ -28,7 +29,14 @@ const Home: React.FC = () => {
   const { userRepository } = useRepository();
   const [user, setUser] = useState<User | null>(null);
 
-  const captuedPoints = user?.capturedPoints.filter((it) => !it.expiredAt);
+  const captuedPoints = useMemo(
+    () => user?.capturedPoints.filter((it) => !it.expiredAt),
+    [user]
+  );
+  const bossInfo = useMemo(
+    () => (!!user?.capturedPoints ? getBossInfo(user.capturedPoints) : null),
+    [captuedPoints]
+  );
 
   useIonViewDidEnter(() => {
     if (!AuthedUser?.email) return;
@@ -93,7 +101,7 @@ const Home: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
-        <HomeBossCard />
+        <HomeBossCard boss={bossInfo} />
         <HomeCaptureCard capturedPoints={captuedPoints} />
       </IonContent>
     </IonPage>

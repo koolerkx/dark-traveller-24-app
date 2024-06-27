@@ -7,4 +7,6 @@ const ATTACK_POWER: Record<string, number> = {
   "5": 100,
 };
 
-export { ATTACK_POWER };
+const BOSS_HP = 200000;
+
+export { ATTACK_POWER, BOSS_HP };
