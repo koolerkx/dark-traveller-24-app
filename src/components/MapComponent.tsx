@@ -10,9 +10,10 @@ import { differenceInSeconds } from "date-fns";
 
 interface ContainerProps {
   points: PointWithStatus[];
+  onMarkerClick: (point: PointWithStatus) => void;
 }
 
-const MapComponent: React.FC<ContainerProps> = ({ points }) => {
+const MapComponent: React.FC<ContainerProps> = ({ points, onMarkerClick }) => {
   const [map, setMap] = useState<Map | null>(null);
   const [cycleTrackData, setCycleTrackData] = useState<GeoJsonObject | null>(
     null
@@ -57,15 +58,15 @@ const MapComponent: React.FC<ContainerProps> = ({ points }) => {
     };
 
     const statusText = {
-      [PointStatus.NEW]: "未被任何人佔領",
+      [PointStatus.NEW]: "未被佔領",
       [PointStatus.CAPTURED]: "被佔領中",
       [PointStatus.EXPIRED]: "可佔領",
       [PointStatus.CLEARED]: "可佔領",
     };
 
     const statusColor = {
-      [PointStatus.NEW]: "primary",
-      [PointStatus.CAPTURED]: "danger",
+      [PointStatus.NEW]: "success",
+      [PointStatus.CAPTURED]: "warning",
       [PointStatus.EXPIRED]: "success",
       [PointStatus.CLEARED]: "success",
     };
@@ -86,8 +87,13 @@ const MapComponent: React.FC<ContainerProps> = ({ points }) => {
             shadowAnchor: [0, 0],
           })
         }
+        eventHandlers={{
+          click: (e) => {
+            onMarkerClick(point);
+          },
+        }}
       >
-        <Popup>
+        {/* <Popup>
           <h3>{point.point}</h3>
           {!!point.heroImage ? (
             <IonImg
@@ -112,7 +118,7 @@ const MapComponent: React.FC<ContainerProps> = ({ points }) => {
               </div>
             ) : null}
           </div>
-        </Popup>
+        </Popup> */}
       </Marker>
     );
   };

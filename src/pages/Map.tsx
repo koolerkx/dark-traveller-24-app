@@ -1,8 +1,16 @@
-import { IonContent, IonPage, useIonToast } from "@ionic/react";
+import {
+  IonContent,
+  IonPage,
+  useIonModal,
+  useIonToast,
+  useIonViewDidEnter,
+  useIonViewWillLeave,
+} from "@ionic/react";
 import { checkmarkCircle, close } from "ionicons/icons";
 import "leaflet/dist/leaflet.css";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import MapComponent from "../components/MapComponent";
+import MapPointModal from "../components/MapPointModal";
 import { useRepository } from "../contexts/repository";
 import { PointWithStatus } from "../repository/point";
 import "./Map.css";
@@ -10,9 +18,38 @@ import "./Map.css";
 const Map: React.FC = () => {
   // const headerTitle = "地圖";
   const [points, setPoints] = useState<PointWithStatus[]>([]);
-  const [present] = useIonToast();
+  const [presentToast] = useIonToast();
+
+  const [selectedPoint, setSelectedPoint] = useState<PointWithStatus | null>(
+    null
+  );
 
   const { pointRepository } = useRepository();
+
+  const [presentModal, dismissModal] = useIonModal(MapPointModal, {
+    point: selectedPoint,
+  });
+
+  useIonViewDidEnter(() => {
+    presentModal({
+      initialBreakpoint: 0.2,
+      breakpoints: [0.2, 0.6],
+      backdropDismiss: false,
+      backdropBreakpoint: 0.2,
+      canDismiss: true,
+    });
+  });
+
+  useIonViewWillLeave(() => {
+    dismissModal();
+  });
+
+  const onMarkerClick = useCallback(
+    (point: PointWithStatus) => {
+      setSelectedPoint(point);
+    },
+    [setSelectedPoint]
+  );
 
   useEffect(
     useCallback(() => {
@@ -22,10 +59,13 @@ const Map: React.FC = () => {
         .getPointsWithCapturedInfo()
         .then((data) => {
           setPoints(data);
+          if (data.length > 0) {
+            setSelectedPoint(data[0]);
+          }
         })
         .catch((error) => {
           console.error(error);
-          present({
+          presentToast({
             message: "出錯了！無法獲取攻擊點資料。",
             duration: 1500,
             icon: checkmarkCircle,
@@ -52,7 +92,7 @@ const Map: React.FC = () => {
         </IonToolbar>
       </IonHeader> */}
       <IonContent fullscreen>
-        <MapComponent points={points} />
+        <MapComponent points={points} onMarkerClick={onMarkerClick} />
       </IonContent>
     </IonPage>
   );
