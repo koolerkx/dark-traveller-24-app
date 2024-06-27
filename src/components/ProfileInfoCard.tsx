@@ -24,6 +24,7 @@ import { useAuth } from "../contexts/auth";
 import { User } from "../repository/user";
 import { PlaceholderText } from "./PlaceholderText";
 import "./ProfileInfoCard.css";
+import { getAttackPower } from "../utils/attackPower";
 
 export const ProfileInfoCardHeaderButton: React.FC<{ className: string }> = ({
   className,
@@ -121,7 +122,11 @@ const ProfileInfoCard: React.FC<ContainerProps> = ({ user }) => {
 
           <IonText color="medium" className="profile-data-item">
             <h3 className="profile-data-title">攻擊力</h3>
-            <div className="profile-data-datum">120</div>
+            <div className="profile-data-datum">
+              <PlaceholderText width={30} height={22}>
+                {!!user ? getAttackPower(user.capturedPoints) : null}
+              </PlaceholderText>
+            </div>
             <h3 className="profile-data-unit">/秒</h3>
           </IonText>
 
