@@ -26,8 +26,6 @@ const HomeBossCard: React.FC<ContainerProps> = ({ boss }) => {
     [boss]
   );
 
-  console.log(boss);
-
   return (
     <IonCard className="boss-card">
       <div className="boss-card-title">
