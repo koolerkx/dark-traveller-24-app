@@ -77,7 +77,7 @@ const MapPointModal: React.FC<ContainerProps> = ({ point }) => {
 
   return (
     <IonPage className="map-modal">
-      <IonContent>
+      <IonContent scrollX={false} scrollY={false}>
         <div className="ion-padding">
           <h1>
             <PlaceholderText width={120} height={32}>
@@ -100,7 +100,6 @@ const MapPointModal: React.FC<ContainerProps> = ({ point }) => {
                 aspectRatio={16 / 9}
                 imageClassName="map-point-image"
               />
-              {/* <img src={point?.heroImage} /> */}
             </div>
           )}
         </div>

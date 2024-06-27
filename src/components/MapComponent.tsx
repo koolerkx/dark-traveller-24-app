@@ -57,25 +57,6 @@ const MapComponent: React.FC<ContainerProps> = ({ points, onMarkerClick }) => {
       [PointStatus.CLEARED]: "/icon/marker_available.svg",
     };
 
-    const statusText = {
-      [PointStatus.NEW]: "未被佔領",
-      [PointStatus.CAPTURED]: "被佔領中",
-      [PointStatus.EXPIRED]: "可佔領",
-      [PointStatus.CLEARED]: "可佔領",
-    };
-
-    const statusColor = {
-      [PointStatus.NEW]: "success",
-      [PointStatus.CAPTURED]: "warning",
-      [PointStatus.EXPIRED]: "success",
-      [PointStatus.CLEARED]: "success",
-    };
-
-    const secondsSinceCaptured =
-      !!point.capturedInfo && !!point.capturedInfo.capturedAt
-        ? differenceInSeconds(new Date(), point.capturedInfo.capturedAt)
-        : 0;
-
     return (
       <Marker
         position={[point.location.lat, point.location.long]}
@@ -92,34 +73,7 @@ const MapComponent: React.FC<ContainerProps> = ({ points, onMarkerClick }) => {
             onMarkerClick(point);
           },
         }}
-      >
-        {/* <Popup>
-          <h3>{point.point}</h3>
-          {!!point.heroImage ? (
-            <IonImg
-              src={point.heroImage}
-              alt={point.point}
-              className="marker-image"
-            />
-          ) : null}
-
-          <div className="popup-description-container">
-            <div>
-              <IonText color={statusColor[point.status]}>
-                {statusText[point.status]}
-              </IonText>
-            </div>
-            {point.status === PointStatus.CAPTURED ||
-            point.status === PointStatus.EXPIRED ? (
-              <div>
-                <IonText>
-                  已佔領時間：{`${secondsSinceCaptured}/${360}`}秒
-                </IonText>
-              </div>
-            ) : null}
-          </div>
-        </Popup> */}
-      </Marker>
+      ></Marker>
     );
   };
 
