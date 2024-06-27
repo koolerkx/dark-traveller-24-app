@@ -14,10 +14,10 @@ import {
   useIonToast,
 } from "@ionic/react";
 import { close, warning } from "ionicons/icons";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { Redirect } from "react-router";
 import { useAuth } from "../contexts/auth";
 import "./Login.css";
-import { Redirect } from "react-router";
 import Splash from "./Splash";
 
 const Login: React.FC = () => {

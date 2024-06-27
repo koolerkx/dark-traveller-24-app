@@ -68,6 +68,9 @@ const Profile: React.FC = () => {
     if (!_user?.email) return;
     if (!userRepository) return;
 
+    setUser(null);
+    setRankedUser(null);
+
     userRepository
       ?.getUser(_user.email)
       .then(setUser)

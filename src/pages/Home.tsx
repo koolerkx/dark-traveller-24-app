@@ -15,8 +15,8 @@ import HomeCaptureCard from "../components/HomeCaptureCard";
 import { useAuth } from "../contexts/auth";
 import { useRepository } from "../contexts/repository";
 import { User } from "../repository/user";
-import "./Home.css";
 import { getBossInfo } from "../utils/boss";
+import "./Home.css";
 
 const Home: React.FC = () => {
   const headerTitle = "單車定向";
@@ -41,6 +41,8 @@ const Home: React.FC = () => {
   useIonViewDidEnter(() => {
     if (!AuthedUser?.email) return;
     if (!userRepository) return;
+
+    setUser(null);
 
     userRepository
       .getUser(AuthedUser.email)
