@@ -14,3 +14,9 @@
 .profile-point-list .level {
   text-align: right;
 }
+
+.profile-point-list-loading {
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+}

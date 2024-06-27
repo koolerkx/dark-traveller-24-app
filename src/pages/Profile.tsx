@@ -39,25 +39,28 @@ const Profile: React.FC = () => {
     return rankIndex + 1;
   }, [user, userRepository]);
   const capturedPoints = useMemo(
-    () => user?.capturedPoints.filter((it) => it.expiredAt === null) ?? [],
+    () =>
+      user ? user.capturedPoints.filter((it) => it.expiredAt === null) : null,
     [user?.capturedPoints]
   );
   const expiredPoints = useMemo(
     () =>
-      Object.values(
-        user?.capturedPoints.reduce(
-          (acc, cur) => ({
-            ...acc,
-            [cur.pointId]: isAfter(
-              cur.createdAt,
-              acc[cur.pointId]?.createdAt ?? 0
-            )
-              ? cur
-              : acc[cur.pointId] || cur,
-          }),
-          {} as Record<string, CapturedPoint>
-        ) ?? {}
-      ).filter((it) => !!it.expiredAt),
+      user
+        ? Object.values(
+            user.capturedPoints.reduce(
+              (acc, cur) => ({
+                ...acc,
+                [cur.pointId]: isAfter(
+                  cur.createdAt,
+                  acc[cur.pointId]?.createdAt ?? 0
+                )
+                  ? cur
+                  : acc[cur.pointId] || cur,
+              }),
+              {} as Record<string, CapturedPoint>
+            ) ?? {}
+          ).filter((it) => !!it.expiredAt)
+        : null,
     [user?.capturedPoints]
   );
 

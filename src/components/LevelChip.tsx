@@ -11,6 +11,13 @@ export const levelColor: Record<string, string> = {
 
 export const LevelChip: React.FC<{ level?: number }> = ({ level }) => {
   return (
-    <IonChip color={levelColor[level?.toString() ?? "1"]}>等級 {level}</IonChip>
+    <IonChip
+      color={levelColor[level?.toString() ?? "1"]}
+      style={{
+        pointerEvents: "none",
+      }}
+    >
+      等級 {level}
+    </IonChip>
   );
 };
