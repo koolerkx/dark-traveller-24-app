@@ -1,9 +1,5 @@
-import {
-  IDetectedBarcode,
-  Scanner,
-  useDevices,
-} from "@yudiel/react-qr-scanner";
-import React, { useCallback, useMemo, useState } from "react";
+import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
+import React, { useCallback, useMemo } from "react";
 import "./QRScanner.css";
 
 interface containerProps {
@@ -78,7 +74,8 @@ const QRScanner: React.FC<containerProps> = ({
         styles={{
           video: {
             height: "100%",
-            width: "auto",
+            width: "100%",
+            objectFit: "cover",
           },
         }}
       >
