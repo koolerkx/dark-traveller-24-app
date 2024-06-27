@@ -21,6 +21,7 @@ import {
 } from "../error";
 import { CapturedPoint, UpgradedPoint, pointConverter } from "./point";
 import { FirestoreRepository } from "./repository";
+import { getBossInfo } from "../utils/boss";
 
 // 5 minutes
 export const CAPTURED_POINT_COOLDOWN_SECONDS = 60;
@@ -222,6 +223,23 @@ class UserRepository extends FirestoreRepository {
     });
 
     return capturedPoint;
+  }
+
+  // ascending order of rank, descending order of attackedPower
+  public async getRanking(): Promise<User[]> {
+    const now = new Date();
+
+    const usersQuerySnapshot = await getDocs(this.userRef);
+    const users = usersQuerySnapshot.docs.map((it) => it.data());
+
+    const ranking = users
+      .map((it) => ({
+        ...it,
+        bossInfo: getBossInfo(it.capturedPoints),
+      }))
+      .sort((a, b) => b.bossInfo.attackedPower - a.bossInfo.attackedPower);
+
+    return ranking;
   }
 }
 

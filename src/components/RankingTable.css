@@ -4,3 +4,7 @@
   row-gap: 0.5rem;
   column-gap: 0.5rem;
 }
+
+.ranking-point-none {
+  text-align: center;
+}

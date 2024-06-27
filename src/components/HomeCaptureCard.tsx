@@ -16,8 +16,6 @@ import "./HomeCaptureCard.css";
 import { levelColor } from "./LevelChip";
 import { PlaceholderText } from "./PlaceholderText";
 
-export type Point = { label: string; level?: number };
-
 export const PointChip: React.FC<{
   label: string;
   level: number;

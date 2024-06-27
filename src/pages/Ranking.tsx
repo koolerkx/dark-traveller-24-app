@@ -4,25 +4,67 @@ import {
   IonPage,
   IonRefresher,
   IonRefresherContent,
+  IonSpinner,
   IonTitle,
   IonToolbar,
   RefresherEventDetail,
+  useIonToast,
+  useIonViewDidEnter,
 } from "@ionic/react";
-import "./Home.css";
+import { checkmarkCircle, close } from "ionicons/icons";
+import { useCallback, useState } from "react";
 import RankingTable from "../components/RankingTable";
-import { useCallback } from "react";
+import { useRepository } from "../contexts/repository";
+import { User } from "../repository/user";
+import "./Ranking.css";
 
 const Ranking: React.FC = () => {
   const headerTitle = "排行榜";
 
+  const { userRepository } = useRepository();
+  const [rankedUsers, setRankedUsers] = useState<User[] | null>(null);
+  const [presentToast, dismissToast] = useIonToast();
+
+  const fetchRanking = (cb?: () => void) => {
+    userRepository
+      ?.getRanking()
+      .then((users) => {
+        setRankedUsers(users);
+      })
+      .then(() => {
+        if (cb) cb();
+      })
+      .catch((error) => {
+        console.error(error);
+        presentToast({
+          message: "出錯了！無法獲取排行榜資料。",
+          duration: 1500,
+          icon: checkmarkCircle,
+          position: "bottom",
+          color: "warning",
+          swipeGesture: "vertical",
+          buttons: [
+            {
+              icon: close,
+              role: "cancel",
+            },
+          ],
+        });
+      });
+  };
+
   const handleRefresh = useCallback(
     (event: CustomEvent<RefresherEventDetail>) => {
-      setTimeout(() => {
+      fetchRanking(() => {
         event.detail.complete();
-      }, 2000);
+      });
     },
     []
   );
+
+  useIonViewDidEnter(() => {
+    fetchRanking();
+  });
 
   return (
     <IonPage>
@@ -40,7 +82,13 @@ const Ranking: React.FC = () => {
             <IonTitle size="large">{headerTitle}</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <RankingTable />
+        {!!rankedUsers ? (
+          <RankingTable users={rankedUsers} />
+        ) : (
+          <div className="ranking-table-loading">
+            <IonSpinner name="dots" />
+          </div>
+        )}
       </IonContent>
     </IonPage>
   );
