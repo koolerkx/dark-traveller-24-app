@@ -28,7 +28,16 @@ const Profile: React.FC = () => {
   const { userRepository } = useRepository();
 
   const [user, setUser] = useState<User | null>(null);
+  const [rankedUsers, setRankedUser] = useState<User[] | null>(null);
 
+  const userRanking = useMemo(() => {
+    if (!user) return null;
+    if (!rankedUsers) return null;
+
+    const rankIndex = rankedUsers.findIndex((it) => it.id === user?.id);
+
+    return rankIndex + 1;
+  }, [user, userRepository]);
   const capturedPoints = useMemo(
     () => user?.capturedPoints.filter((it) => it.expiredAt === null) ?? [],
     [user?.capturedPoints]
@@ -62,7 +71,30 @@ const Profile: React.FC = () => {
       .catch((error) => {
         console.error(error);
         presentToast({
-          message: "出錯了！無法獲取攻擊點資料。",
+          message: "出錯了！無法獲取用戶資料。",
+          duration: 1500,
+          icon: checkmarkCircle,
+          position: "bottom",
+          color: "warning",
+          swipeGesture: "vertical",
+          buttons: [
+            {
+              icon: close,
+              role: "cancel",
+            },
+          ],
+        });
+      });
+
+    userRepository
+      .getRanking()
+      .then((it) => {
+        setRankedUser(it);
+      })
+      .catch((error) => {
+        console.error(error);
+        presentToast({
+          message: "出錯了！無法獲取排行資料。",
           duration: 1500,
           icon: checkmarkCircle,
           position: "bottom",
@@ -95,7 +127,7 @@ const Profile: React.FC = () => {
             <IonTitle size="large">{headerTitle}</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ProfileInfoCard user={user} />
+        <ProfileInfoCard user={user} rank={userRanking} />
         <ProfilePointList
           capturedPoints={capturedPoints}
           expiredPoints={expiredPoints}

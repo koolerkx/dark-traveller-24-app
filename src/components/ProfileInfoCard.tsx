@@ -72,13 +72,14 @@ export const ProfileInfoCardHeaderButton: React.FC<{ className: string }> = ({
 
 interface ContainerProps {
   user?: User | null;
+  rank?: number | null;
 }
 
-const ProfileInfoCard: React.FC<ContainerProps> = ({ user }) => {
+const ProfileInfoCard: React.FC<ContainerProps> = ({ user, rank }) => {
   const maximumLevel = 5;
 
   const capturedPointCount =
-    user?.capturedPoints.filter((it) => !it.expiredAt).length ?? 0;
+    user?.capturedPoints.filter((it) => !it.expiredAt).length ?? null;
 
   return (
     <IonCard>
@@ -134,7 +135,11 @@ const ProfileInfoCard: React.FC<ContainerProps> = ({ user }) => {
 
           <IonText color="medium" className="profile-data-item">
             <h3 className="profile-data-title">排名</h3>
-            <div className="profile-data-datum">4</div>
+            <div className="profile-data-datum">
+              <PlaceholderText width={30} height={22}>
+                {rank}
+              </PlaceholderText>
+            </div>
             <h3 className="profile-data-unit">位</h3>
           </IonText>
 
