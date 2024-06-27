@@ -20,7 +20,12 @@ export const PointChip: React.FC<{
   label: string;
   level: number;
 }> = ({ label, level }) => (
-  <IonChip color={levelColor[level.toString()]}>
+  <IonChip
+    color={levelColor[level.toString()]}
+    style={{
+      pointerEvents: "none",
+    }}
+  >
     <div className="text-ellipsis">{label}</div>
   </IonChip>
 );
