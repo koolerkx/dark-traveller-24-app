@@ -7,11 +7,11 @@ import {
 } from "@ionic/react";
 import { PointChip } from "./HomeCaptureCard";
 import "./RankingTable.css";
-import { User } from "../repository/user";
+import { User, UserForRanking } from "../repository/user";
 
 const RankingItem: React.FC<{
   rank: number;
-  user: User;
+  user: UserForRanking;
 }> = ({ user, rank }) => {
   return (
     <IonAccordion value={rank.toString()}>
@@ -21,9 +21,9 @@ const RankingItem: React.FC<{
         </IonLabel>
       </IonItem>
 
-      {user.capturedPoints.length > 0 ? (
+      {user.activePoints.length > 0 ? (
         <div className="ion-padding ranking-point-list" slot="content">
-          {user.capturedPoints.map((point, idx) => (
+          {user.activePoints.map((point, idx) => (
             <PointChip
               key={`${idx}|${point.pointId}|${point.userId}`}
               label={point.pointName}
@@ -41,7 +41,7 @@ const RankingItem: React.FC<{
 };
 
 interface ContainerProps {
-  users: User[];
+  users: UserForRanking[];
 }
 
 const RankingTable: React.FC<ContainerProps> = ({ users }) => {

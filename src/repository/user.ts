@@ -36,6 +36,10 @@ export interface User {
   upgradedPoints: UpgradedPoint[];
 }
 
+export interface UserForRanking extends User {
+  activePoints: CapturedPoint[];
+}
+
 const parseCapturedPoint = {
   fromFirestore: (point: CapturedPoint): CapturedPoint => ({
     ...point,
@@ -226,7 +230,7 @@ class UserRepository extends FirestoreRepository {
   }
 
   // ascending order of rank, descending order of attackedPower
-  public async getRanking(): Promise<User[]> {
+  public async getRanking(): Promise<UserForRanking[]> {
     const now = new Date();
 
     const usersQuerySnapshot = await getDocs(this.userRef);
@@ -237,7 +241,11 @@ class UserRepository extends FirestoreRepository {
         ...it,
         bossInfo: getBossInfo(it.capturedPoints),
       }))
-      .sort((a, b) => b.bossInfo.attackedPower - a.bossInfo.attackedPower);
+      .sort((a, b) => b.bossInfo.attackedPower - a.bossInfo.attackedPower)
+      .map((it) => ({
+        ...it,
+        activePoints: it.capturedPoints.filter((it) => it.expiredAt == null),
+      }));
 
     return ranking;
   }

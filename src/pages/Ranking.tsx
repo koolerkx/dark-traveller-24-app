@@ -15,14 +15,14 @@ import { checkmarkCircle, close } from "ionicons/icons";
 import { useCallback, useState } from "react";
 import RankingTable from "../components/RankingTable";
 import { useRepository } from "../contexts/repository";
-import { User } from "../repository/user";
+import { User, UserForRanking } from "../repository/user";
 import "./Ranking.css";
 
 const Ranking: React.FC = () => {
   const headerTitle = "排行榜";
 
   const { userRepository } = useRepository();
-  const [rankedUsers, setRankedUsers] = useState<User[] | null>(null);
+  const [rankedUsers, setRankedUsers] = useState<UserForRanking[] | null>(null);
   const [presentToast, dismissToast] = useIonToast();
 
   const fetchRanking = (cb?: () => void) => {
