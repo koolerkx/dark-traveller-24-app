@@ -17,6 +17,8 @@ import { useRepository } from "../contexts/repository";
 import { User } from "../repository/user";
 import { getBossInfo } from "../utils/boss";
 import "./Home.css";
+import { logEvent } from "firebase/analytics";
+import { useFirebase } from "../contexts/firebase";
 
 const Home: React.FC = () => {
   const headerTitle = "單車定向";
@@ -38,11 +40,18 @@ const Home: React.FC = () => {
     [captuedPoints]
   );
 
+  const { analytics } = useFirebase();
+
   useIonViewDidEnter(() => {
     if (!AuthedUser?.email) return;
     if (!userRepository) return;
 
     setUser(null);
+
+    if (analytics)
+      logEvent(analytics, "view", {
+        page: "home",
+      });
 
     userRepository
       .getUser(AuthedUser.email)

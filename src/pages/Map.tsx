@@ -14,6 +14,8 @@ import MapPointModal from "../components/MapPointModal";
 import { useRepository } from "../contexts/repository";
 import { PointWithStatus } from "../repository/point";
 import "./Map.css";
+import { useFirebase } from "../contexts/firebase";
+import { logEvent } from "firebase/analytics";
 
 const Map: React.FC = () => {
   // const headerTitle = "地圖";
@@ -30,6 +32,8 @@ const Map: React.FC = () => {
     point: selectedPoint,
   });
 
+  const { analytics } = useFirebase();
+
   useIonViewDidEnter(() => {
     presentModal({
       initialBreakpoint: 0.2,
@@ -38,6 +42,11 @@ const Map: React.FC = () => {
       backdropBreakpoint: 0.2,
       canDismiss: true,
     });
+
+    if (analytics)
+      logEvent(analytics, "view", {
+        page: "login",
+      });
   });
 
   useIonViewWillLeave(() => {
@@ -46,6 +55,12 @@ const Map: React.FC = () => {
 
   const onMarkerClick = useCallback(
     (point: PointWithStatus) => {
+      if (analytics)
+        logEvent(analytics, "map_marker_clicked", {
+          pointId: point.id,
+          pointName: point.point,
+        });
+
       setSelectedPoint(point);
     },
     [setSelectedPoint]

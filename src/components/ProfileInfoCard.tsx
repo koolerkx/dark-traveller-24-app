@@ -25,15 +25,24 @@ import { User } from "../repository/user";
 import { PlaceholderText } from "./PlaceholderText";
 import "./ProfileInfoCard.css";
 import { getAttackPower } from "../utils/attackPower";
+import { logEvent } from "firebase/analytics";
+import { useFirebase } from "../contexts/firebase";
 
 export const ProfileInfoCardHeaderButton: React.FC<{ className: string }> = ({
   className,
 }) => {
   const { logout } = useAuth();
+  const { analytics } = useFirebase();
   const { push } = useIonRouter();
 
   const onLogoutButtonClick = useCallback(async () => {
     await logout();
+
+    if (analytics) {
+      logEvent(analytics, "view", {
+        page: "profile",
+      });
+    }
     push("/login", "none", "replace");
   }, [logout, push]);
 

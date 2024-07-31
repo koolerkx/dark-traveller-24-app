@@ -8,12 +8,14 @@ import {
   useIonViewDidEnter,
 } from "@ionic/react";
 import { isAfter } from "date-fns";
+import { logEvent } from "firebase/analytics";
 import { checkmarkCircle, close } from "ionicons/icons";
 import { useMemo, useState } from "react";
 import ProfileInfoCard from "../components/ProfileInfoCard";
 import "../components/ProfileInfoCard.css";
 import ProfilePointList from "../components/ProfilePointList";
 import { useAuth } from "../contexts/auth";
+import { useFirebase } from "../contexts/firebase";
 import { useRepository } from "../contexts/repository";
 import { CapturedPoint } from "../repository/point";
 import { User } from "../repository/user";
@@ -26,6 +28,7 @@ const Profile: React.FC = () => {
   const [presentToast] = useIonToast();
 
   const { userRepository } = useRepository();
+  const { analytics } = useFirebase();
 
   const [user, setUser] = useState<User | null>(null);
   const [rankedUsers, setRankedUser] = useState<User[] | null>(null);
@@ -117,6 +120,12 @@ const Profile: React.FC = () => {
   };
 
   useIonViewDidEnter(() => {
+    if (analytics) {
+      logEvent(analytics, "view", {
+        page: "profile",
+      });
+    }
+
     loadUser();
   });
 

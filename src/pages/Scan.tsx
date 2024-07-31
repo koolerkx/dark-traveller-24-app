@@ -18,6 +18,8 @@ import {
 } from "../error";
 import { CAPTURED_POINT_COOLDOWN_SECONDS } from "../repository/user";
 import "./Home.css";
+import { logEvent } from "firebase/analytics";
+import { useFirebase } from "../contexts/firebase";
 
 const Scan: React.FC = () => {
   const headerTitle = "佔領攻擊點";
@@ -30,9 +32,15 @@ const Scan: React.FC = () => {
 
   const { userRepository } = useRepository();
   const { user: authedUser } = useAuth();
+  const { analytics } = useFirebase();
 
   useIonViewDidEnter(() => {
     setIsCameraActive(true);
+
+    if (analytics)
+      logEvent(analytics, "view", {
+        page: "scan",
+      });
   });
 
   useIonViewWillLeave(() => {
@@ -74,6 +82,11 @@ const Scan: React.FC = () => {
 
           resetOnDismiss = true;
 
+          if (!!analytics)
+            logEvent(analytics, "scan_capture_point", {
+              pointId: capturedPoint.pointId,
+            });
+
           await presentAlert({
             header: `佔領成功！`,
             subHeader: `佔領了【${capturedPoint.pointName}】`,
@@ -87,6 +100,11 @@ const Scan: React.FC = () => {
 
           resetOnDismiss = true;
 
+          if (!!analytics)
+            logEvent(analytics, "scan_user_upgrade", {
+              upgradeId: upgradeParam,
+            });
+
           await presentAlert({
             header: `升級成功！`,
             buttons: ["關閉訊息"],
@@ -99,6 +117,10 @@ const Scan: React.FC = () => {
         resetOnDismiss = true;
 
         if (error instanceof CapturedPointInCooldownError) {
+          if (!!analytics) {
+            logEvent(analytics, "scan_error_cooldown");
+          }
+
           presentAlert({
             header: "攻擊點處於保護狀態",
             subHeader: `剩餘時間：${error.secondsSincecaptured} / ${CAPTURED_POINT_COOLDOWN_SECONDS}秒`,
@@ -110,6 +132,10 @@ const Scan: React.FC = () => {
             },
           });
         } else if (error instanceof UpgradePointAlreadyAppliedError) {
+          if (!!analytics) {
+            logEvent(analytics, "scan_error_repeated_upgrade");
+          }
+
           presentAlert({
             header: "已經升級了",
             message: `你已經在這個升級點進行升級，你可以尋找其他升級點進行升級！`,
@@ -120,6 +146,10 @@ const Scan: React.FC = () => {
             },
           });
         } else if (error instanceof CapturedPointAlreadyCapturedError) {
+          if (!!analytics) {
+            logEvent(analytics, "scan_error_repeated_capture");
+          }
+
           presentAlert({
             header: "已經佔領了",
             message: `你已經佔領了這個攻擊點，升級後再佔領！或者先到其他攻擊點進行佔領！`,
@@ -130,6 +160,10 @@ const Scan: React.FC = () => {
             },
           });
         } else {
+          if (!!analytics) {
+            logEvent(analytics, "scan_error_other");
+          }
+
           presentAlert({
             header: "出現錯誤",
             message: `請稍後再試，數次都不成功請聯絡管理員。`,

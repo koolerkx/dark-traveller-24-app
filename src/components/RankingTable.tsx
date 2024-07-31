@@ -8,14 +8,17 @@ import {
 import { PointChip } from "./HomeCaptureCard";
 import "./RankingTable.css";
 import { User, UserForRanking } from "../repository/user";
+import { useFirebase } from "../contexts/firebase";
+import { logEvent } from "firebase/analytics";
 
 const RankingItem: React.FC<{
   rank: number;
   user: UserForRanking;
-}> = ({ user, rank }) => {
+  onClick: (rank: number, user: UserForRanking) => void;
+}> = ({ user, rank, onClick }) => {
   return (
     <IonAccordion value={rank.toString()}>
-      <IonItem slot="header">
+      <IonItem slot="header" onClick={() => onClick(rank, user)}>
         <IonLabel>
           {rank}. {user.name}
         </IonLabel>
@@ -45,11 +48,26 @@ interface ContainerProps {
 }
 
 const RankingTable: React.FC<ContainerProps> = ({ users }) => {
+  const { analytics } = useFirebase();
+
+  const onClick = (rank: number, user: UserForRanking) => {
+    if (analytics)
+      logEvent(analytics, "rank_click", {
+        name: user.name,
+        rank: rank,
+      });
+  };
+
   return (
     <IonList inset={true}>
       <IonAccordionGroup>
         {users.map((user, idx) => (
-          <RankingItem key={user.id} rank={idx + 1} user={user} />
+          <RankingItem
+            key={user.id}
+            rank={idx + 1}
+            user={user}
+            onClick={onClick}
+          />
         ))}
       </IonAccordionGroup>
     </IonList>

@@ -17,6 +17,8 @@ import RankingTable from "../components/RankingTable";
 import { useRepository } from "../contexts/repository";
 import { User, UserForRanking } from "../repository/user";
 import "./Ranking.css";
+import { logEvent } from "firebase/analytics";
+import { useFirebase } from "../contexts/firebase";
 
 const Ranking: React.FC = () => {
   const headerTitle = "排行榜";
@@ -24,6 +26,8 @@ const Ranking: React.FC = () => {
   const { userRepository } = useRepository();
   const [rankedUsers, setRankedUsers] = useState<UserForRanking[] | null>(null);
   const [presentToast, dismissToast] = useIonToast();
+
+  const { analytics } = useFirebase();
 
   const fetchRanking = (cb?: () => void) => {
     userRepository
@@ -63,6 +67,11 @@ const Ranking: React.FC = () => {
   );
 
   useIonViewDidEnter(() => {
+    if (analytics)
+      logEvent(analytics, "view", {
+        page: "scan",
+      });
+
     fetchRanking();
   });
 

@@ -12,6 +12,7 @@ import {
   IonToolbar,
   useIonRouter,
   useIonToast,
+  useIonViewDidEnter,
 } from "@ionic/react";
 import { close, warning } from "ionicons/icons";
 import { useCallback, useRef, useState } from "react";
@@ -19,6 +20,8 @@ import { Redirect } from "react-router";
 import { useAuth } from "../contexts/auth";
 import "./Login.css";
 import Splash from "./Splash";
+import { useFirebase } from "../contexts/firebase";
+import { logEvent } from "firebase/analytics";
 
 const Login: React.FC = () => {
   const headerTitle = "登入";
@@ -31,6 +34,15 @@ const Login: React.FC = () => {
 
   const usernameRef = useRef<string>("");
   const passwordRef = useRef<string>("");
+
+  const { analytics } = useFirebase();
+
+  useIonViewDidEnter(() => {
+    if (analytics)
+      logEvent(analytics, "view", {
+        page: "login",
+      });
+  });
 
   const onLoginButtonClick = useCallback(
     async (e: React.MouseEvent) => {
@@ -49,8 +61,22 @@ const Login: React.FC = () => {
           password: passwordRef.current,
         });
 
+        if (!!analytics) {
+          logEvent(analytics, "login", {
+            result: "success",
+            username: usernameRef.current,
+          });
+        }
+
         router.push("/home", "root", "replace");
       } catch {
+        if (!!analytics) {
+          logEvent(analytics, "login", {
+            result: "failed",
+            username: usernameRef.current,
+          });
+        }
+
         present({
           icon: warning,
           message: "登入資訊錯誤",
