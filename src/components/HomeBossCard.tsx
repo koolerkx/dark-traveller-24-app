@@ -54,7 +54,7 @@ const HomeBossCard: React.FC<ContainerProps> = ({ boss }) => {
       <IonCardContent>
         <IonProgressBar value={progress} buffer={1}></IonProgressBar>
 
-        {boss?.hp.remain ?? 0 < 0 ? (
+        {(boss?.hp.remain ?? 0) < 0 ? (
           <div className="boss-card-success-container">
             <IonText>恭喜你成功擊敗Boss！</IonText>
             <IonList
