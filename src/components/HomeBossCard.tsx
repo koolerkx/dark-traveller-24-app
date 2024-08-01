@@ -66,7 +66,7 @@ const HomeBossCard: React.FC<ContainerProps> = ({ boss }) => {
                   <PlaceholderText width={60} height={22}>
                     {boss ? (
                       <IonText color={"success"}>
-                        {boss.hp.total - boss.hp.remain}
+                        {Math.abs(boss.hp.remain)}
                       </IonText>
                     ) : null}
                   </PlaceholderText>
