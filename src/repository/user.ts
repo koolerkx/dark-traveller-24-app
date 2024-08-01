@@ -3,6 +3,7 @@ import {
   Firestore,
   QueryDocumentSnapshot,
   SnapshotOptions,
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -125,6 +126,8 @@ class UserRepository extends FirestoreRepository {
     user: User,
     pointId: string
   ): Promise<CapturedPoint> {
+    let clearedPoint = null;
+
     const capturedPoint = await runTransaction(this.db, async (transaction) => {
       const now = new Date();
 
@@ -171,6 +174,12 @@ class UserRepository extends FirestoreRepository {
       }
 
       if (!!lastCapturedPoint && lastCapturedPoint.userId !== user.id) {
+        // Log
+        clearedPoint = {
+          ...lastCapturedPoint,
+          expiredAt: now,
+        };
+
         // Clear other user last captured point
         const lastCapturedPointUserSnapshot = usersQuerySnapshot.docs.find(
           (it) => it.id === lastCapturedPoint.userId
@@ -224,6 +233,21 @@ class UserRepository extends FirestoreRepository {
       });
 
       return newCapturedPoint;
+    });
+
+    // Log: Cleared Point
+    const clearLogRef = await addDoc(collection(this.db, "activitylog"), {
+      datetime: new Date(),
+      type: "CLEAR_POINT",
+      point: clearedPoint,
+      user: user,
+    });
+
+    const captureLogRef = await addDoc(collection(this.db, "activitylog"), {
+      datetime: new Date(),
+      type: "CAPTURE_POINT",
+      point: capturedPoint,
+      user: user,
     });
 
     return capturedPoint;
