@@ -33,7 +33,7 @@ const Login: React.FC = () => {
   const [present] = useIonToast();
 
   const usernameRef = useRef<string>("");
-  const passwordRef = useRef<string>("");
+  const passwordRef = useRef<string>("123456");
 
   const { analytics } = useFirebase();
 
@@ -127,7 +127,7 @@ const Login: React.FC = () => {
               value={usernameRef.current}
             />
           </IonItem>
-          <IonItem>
+          {/* <IonItem>
             <IonInput
               type="password"
               label="密碼"
@@ -140,7 +140,7 @@ const Login: React.FC = () => {
             >
               <IonInputPasswordToggle color={"dark"} />
             </IonInput>
-          </IonItem>
+          </IonItem> */}
         </IonList>
         <div className="ion-padding">
           <IonNote>你可以從工作人員獲取登入資料</IonNote>
