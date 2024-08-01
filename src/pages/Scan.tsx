@@ -123,7 +123,7 @@ const Scan: React.FC = () => {
 
           presentAlert({
             header: "攻擊點處於保護狀態",
-            subHeader: `剩餘時間：${error.secondsSincecaptured} / ${CAPTURED_POINT_COOLDOWN_SECONDS}秒`,
+            subHeader: `保護時間：${error.secondsSincecaptured} / ${CAPTURED_POINT_COOLDOWN_SECONDS}秒`,
             message: `攻擊點被佔領後5分鐘內，無法被佔領、升級及清除。你可以先到其他攻擊點進行佔領！`,
             buttons: ["關閉訊息"],
             onDidDismiss: () => {

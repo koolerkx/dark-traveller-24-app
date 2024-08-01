@@ -45,7 +45,7 @@ const HomeCaptureCard: React.FC<ContainerProps> = ({ capturedPoints }) => {
       <IonCardContent>
         <IonList inset={true} lines="full" className="capture-card-info-list">
           <IonItem className="capture-card-info-dps">
-            <IonLabel>每秒攻擊力 DPS</IonLabel>
+            <IonLabel>每分鐘攻擊力</IonLabel>
             <IonLabel className="capture-card-info-dps-text">
               <PlaceholderText width={60} height={22}>
                 {capturedPoints ? getAttackPower(capturedPoints) : null}

@@ -137,7 +137,7 @@ const ProfileInfoCard: React.FC<ContainerProps> = ({ user, rank }) => {
                 {!!user ? getAttackPower(user.capturedPoints) : null}
               </PlaceholderText>
             </div>
-            <h3 className="profile-data-unit">/秒</h3>
+            <h3 className="profile-data-unit">/分</h3>
           </IonText>
 
           <span className="profile-data-list-separator"></span>
