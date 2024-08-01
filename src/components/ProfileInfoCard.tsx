@@ -134,7 +134,9 @@ const ProfileInfoCard: React.FC<ContainerProps> = ({ user, rank }) => {
             <h3 className="profile-data-title">攻擊力</h3>
             <div className="profile-data-datum">
               <PlaceholderText width={30} height={22}>
-                {!!user ? getAttackPower(user.capturedPoints) : null}
+                {!!user
+                  ? Math.round(getAttackPower(user.capturedPoints) * 60)
+                  : null}
               </PlaceholderText>
             </div>
             <h3 className="profile-data-unit">/分</h3>
