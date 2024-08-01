@@ -120,6 +120,14 @@ class UserRepository extends FirestoreRepository {
     await updateDoc(userRef, {
       upgradedPoints: [...user.upgradedPoints, upgradePointId],
     });
+
+    // Log: UpgradePointApplied
+    const captureLogRef = await addDoc(collection(this.db, "activitylog"), {
+      datetime: new Date(),
+      type: "USER_UPGRADE",
+      user: user,
+      point: upgradePointId,
+    });
   }
 
   public async capturePoint(
