@@ -28,7 +28,9 @@ const HomeBossCard: React.FC<ContainerProps> = ({ boss }) => {
   const hpText = useMemo(
     () =>
       !!boss
-        ? `HP: ${boss.hp.remain > 0 ? boss.hp.remain : 0} / ${boss.hp.total}`
+        ? `HP: ${
+            boss.hp.remain > 0 ? Math.round(boss.hp.remain * 100) / 100 : 0
+          } / ${boss.hp.total}`
         : null,
     [boss]
   );
@@ -66,7 +68,7 @@ const HomeBossCard: React.FC<ContainerProps> = ({ boss }) => {
                   <PlaceholderText width={60} height={22}>
                     {boss ? (
                       <IonText color={"success"}>
-                        {Math.abs(boss.hp.remain)}
+                        {Math.round(Math.abs(boss.hp.remain) * 100) / 100}
                       </IonText>
                     ) : null}
                   </PlaceholderText>
