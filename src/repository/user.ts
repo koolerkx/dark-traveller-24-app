@@ -244,12 +244,14 @@ class UserRepository extends FirestoreRepository {
     });
 
     // Log: Cleared Point
-    const clearLogRef = await addDoc(collection(this.db, "activitylog"), {
-      datetime: new Date(),
-      type: "CLEAR_POINT",
-      point: clearedPoint,
-      user: user,
-    });
+    if (clearedPoint) {
+      const clearLogRef = await addDoc(collection(this.db, "activitylog"), {
+        datetime: new Date(),
+        type: "CLEAR_POINT",
+        point: clearedPoint,
+        user: user,
+      });
+    }
 
     const captureLogRef = await addDoc(collection(this.db, "activitylog"), {
       datetime: new Date(),
