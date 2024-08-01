@@ -1,4 +1,4 @@
-ion-content {
+.map-modal > ion-content {
   --overflow: hidden;
 }
 
