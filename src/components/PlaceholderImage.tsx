@@ -21,6 +21,7 @@ export const PlaceholderImage: React.FC<Props> = ({
   const [loaded, setLoaded] = React.useState<boolean>(false);
 
   useEffect(() => {
+    setLoaded(false);
     const img = new Image();
     img.src = src ?? "";
 
