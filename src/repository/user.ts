@@ -123,7 +123,7 @@ class UserRepository extends FirestoreRepository {
 
     // Log: UpgradePointApplied
     const captureLogRef = await addDoc(collection(this.db, "activitylog"), {
-      datetime: new Date(),
+      datetime: new Date().toISOString(),
       type: "USER_UPGRADE",
       user: user,
       point: upgradePointId,
@@ -246,7 +246,7 @@ class UserRepository extends FirestoreRepository {
     // Log: Cleared Point
     if (clearedPoint) {
       const clearLogRef = await addDoc(collection(this.db, "activitylog"), {
-        datetime: new Date(),
+        datetime: new Date().toISOString(),
         type: "CLEAR_POINT",
         point: clearedPoint,
         user: user,
@@ -254,7 +254,7 @@ class UserRepository extends FirestoreRepository {
     }
 
     const captureLogRef = await addDoc(collection(this.db, "activitylog"), {
-      datetime: new Date(),
+      datetime: new Date().toISOString(),
       type: "CAPTURE_POINT",
       point: capturedPoint,
       user: user,
