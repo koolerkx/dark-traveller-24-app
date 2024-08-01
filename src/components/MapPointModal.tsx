@@ -1,19 +1,9 @@
-import {
-  IonContent,
-  IonImg,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonListHeader,
-  IonPage,
-  IonText,
-} from "@ionic/react";
+import { IonContent, IonPage, IonText } from "@ionic/react";
 import React, { useMemo } from "react";
-import "./MapPointModal.css";
-import { PlaceholderText } from "./PlaceholderText";
 import { PointStatus, PointWithStatus } from "../repository/point";
-import { differenceInMinutes } from "date-fns";
+import "./MapPointModal.css";
 import { PlaceholderImage } from "./PlaceholderImage";
+import { PlaceholderText } from "./PlaceholderText";
 
 const InfoItem: React.FC<{
   title: string;

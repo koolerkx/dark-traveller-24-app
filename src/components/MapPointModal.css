@@ -1,3 +1,7 @@
+ion-content {
+  --overflow: hidden;
+}
+
 .map-modal .ion-padding {
   padding-bottom: 0;
 }
