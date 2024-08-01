@@ -52,3 +52,11 @@
 
   margin-top: 16px;
 }
+
+.capture-card-note {
+  margin-top: 16px;
+}
+
+.capture-card-note p {
+  font-size: 12px;
+}

@@ -2,6 +2,7 @@ import {
   IonCard,
   IonCardContent,
   IonCardHeader,
+  IonCardSubtitle,
   IonCardTitle,
   IonChip,
   IonItem,
@@ -39,6 +40,7 @@ const HomeCaptureCard: React.FC<ContainerProps> = ({ capturedPoints }) => {
     <IonCard className="capture-card">
       <IonCardHeader>
         <IonCardTitle>佔領中</IonCardTitle>
+        <IonCardSubtitle>CAPTURE</IonCardSubtitle>
       </IonCardHeader>
       <IonCardContent>
         <IonList inset={true} lines="full" className="capture-card-info-list">
@@ -74,6 +76,10 @@ const HomeCaptureCard: React.FC<ContainerProps> = ({ capturedPoints }) => {
             <IonSpinner name="dots" />
           </div>
         )}
+
+        <div className="capture-card-note">
+          <p>到地圖尋找攻擊點位置吧！</p>
+        </div>
       </IonCardContent>
     </IonCard>
   );

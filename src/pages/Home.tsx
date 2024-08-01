@@ -19,6 +19,7 @@ import { getBossInfo } from "../utils/boss";
 import "./Home.css";
 import { logEvent } from "firebase/analytics";
 import { useFirebase } from "../contexts/firebase";
+import HomeLevelCard from "../components/HomeLevelCard";
 
 const Home: React.FC = () => {
   const headerTitle = "單車定向";
@@ -105,7 +106,7 @@ const Home: React.FC = () => {
           <IonTitle>{headerTitle}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent fullscreen scrollY={true} scrollX={false}>
         <IonHeader collapse="condense">
           <IonToolbar>
             <IonTitle size="large">{headerTitle}</IonTitle>
@@ -114,6 +115,7 @@ const Home: React.FC = () => {
 
         <HomeBossCard boss={bossInfo} />
         <HomeCaptureCard capturedPoints={captuedPoints} />
+        <HomeLevelCard user={user} />
       </IonContent>
     </IonPage>
   );

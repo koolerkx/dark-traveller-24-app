@@ -5,7 +5,11 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonChip,
+  IonItem,
+  IonLabel,
+  IonList,
   IonProgressBar,
+  IonText,
 } from "@ionic/react";
 import "./HomeBossCard.css";
 import { BossInfo } from "../utils/boss";
@@ -22,7 +26,10 @@ const HomeBossCard: React.FC<ContainerProps> = ({ boss }) => {
     [boss]
   );
   const hpText = useMemo(
-    () => (!!boss ? `HP: ${boss.hp.remain} / ${boss.hp.total}` : null),
+    () =>
+      !!boss
+        ? `HP: ${boss.hp.remain > 0 ? boss.hp.remain : 0} / ${boss.hp.total}`
+        : null,
     [boss]
   );
 
@@ -44,6 +51,30 @@ const HomeBossCard: React.FC<ContainerProps> = ({ boss }) => {
 
       <IonCardContent>
         <IonProgressBar value={progress} buffer={1}></IonProgressBar>
+
+        {boss?.hp.remain ?? 0 < 0 ? (
+          <div className="boss-card-success-container">
+            <IonText>恭喜你成功擊敗Boss！</IonText>
+            <IonList
+              inset={true}
+              lines="full"
+              className="boss-card-extra-damage"
+            >
+              <IonItem className="capture-card-info-dps">
+                <IonLabel color={"success"}>溢出傷害</IonLabel>
+                <IonLabel className="capture-card-info-dps-text">
+                  <PlaceholderText width={60} height={22}>
+                    {boss ? (
+                      <IonText color={"success"}>
+                        {boss.hp.total - boss.hp.remain}
+                      </IonText>
+                    ) : null}
+                  </PlaceholderText>
+                </IonLabel>
+              </IonItem>
+            </IonList>
+          </div>
+        ) : null}
       </IonCardContent>
     </IonCard>
   );
