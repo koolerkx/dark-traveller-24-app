@@ -108,7 +108,7 @@ UI 概要: [doc/UI_OVERVIEW.md](doc/UI_DESCRIPTION.ja.md)
 
 - **イベント分析とレポート**：
   https://github.com/koolerkx/dark-traveller-24-analysis
-- **スタッフパトロールダッシュボード（ウェブ）**：
+- **スタッフ用**：
   https://github.com/koolerkx/dark-traveller-24-patrol
 - **繁体字中国語 PDF レポート**：
   詳細なイベントパラメータ設計とウェブ分析（内部）
