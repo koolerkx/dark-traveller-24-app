@@ -112,7 +112,3 @@ UI 總覽: [doc/UI_OVERVIEW.md](doc/UI_DESCRIPTION.ja.md)
   https://github.com/koolerkx/dark-traveller-24-patrol
 - **繁體中文 PDF 報告**：
   詳細的活動參數設計和網站分析（內部）
-
-## 授權
-
-MIT 授權
