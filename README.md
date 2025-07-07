@@ -1,4 +1,4 @@
-[English](README.md) | [日本語](README.ja.md) | [�?體中文](README.zh-Hant.md)
+[English](README.md) | [日本語](README.ja.md) | [繁體中文](README.zh-Hant.md)
 
 # Dark Traveller 24 App
 
@@ -6,9 +6,9 @@
 
 - PWA-ready React/Ionic application for supporting a one-day offline city orienteering event.
 - Participants ride bicycles to find QR-coded checkpoints in the city.
-- Scanning a checkpoint “captures�? it and earns marks (HP) over time.
+- Scanning a checkpoint â€œcapturesâ€? it and earns marks (HP) over time.
 - Teams compete: first to accumulate a target amount of marks wins.
-- Participants can spend marks at “upgrade points�? to increase mark-earning speed.
+- Participants can spend marks at â€œupgrade pointsâ€? to increase mark-earning speed.
 
 Technical Overview: [doc/TECHNICAL_OVERVIEW.md](doc/TECHNICAL_OVERVIEW.md)
 UI Overciew: [doc/UI_OVERVIEW.md](doc/UI_DESCRIPTION.md)
@@ -34,7 +34,7 @@ This project is designed to be deployed on Firebase and is not intended for gene
 - **QR Code Scanning**: Utilizes the web browser's native camera API for a seamless PWA experience to scan checkpoints and upgrade codes.
 - **Progress & Ranking**: Home screen displays current objective progress and next target checkpoint. Ranking screen shows team standings and captured points.
 - **Profile & Stats**: Team profile page with HP, upgrade level, and activity log.
-- **Checkpoint Protection**: Captured checkpoints enter a 5-minute “cool-down�? period before they can be recaptured.
+- **Checkpoint Protection**: Captured checkpoints enter a 5-minute â€œcool-downâ€? period before they can be recaptured.
 
 ## Technical Stack
 
